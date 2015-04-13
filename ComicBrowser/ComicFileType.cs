@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,6 +26,21 @@ namespace ComicBrowser
                 default:
                     return String.Empty;
             }
+        }
+
+        public static bool Matches(string file)
+        {
+            string extension = Path.GetExtension(file).ToLower();
+
+            foreach(ComicFileType type in Enum.GetValues(typeof(ComicFileType)))
+            {
+                if(extension.Equals(type.ToString()))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

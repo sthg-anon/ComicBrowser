@@ -9,9 +9,9 @@ namespace ComicBrowser
     {
         private const string CBXML_EXTENSION = ".cbxml";
 
-        private readonly string file;
+        private readonly string directory;
         private readonly XmlDocument xml = new XmlDocument();
-                               //file name, comic
+         //file name relative to directory, comic
         private readonly Dictionary<string, Comic> comics = new Dictionary<string, Comic>();
 
         public CBXml(string file)
@@ -21,7 +21,7 @@ namespace ComicBrowser
                 throw new FileNotFoundException(String.Format("{0} is not a file!", file));
             }
 
-            this.file = file;
+            directory = new FileInfo(file).Directory.FullName;
 
             bool fileExists = File.Exists(file);
 
@@ -58,15 +58,21 @@ namespace ComicBrowser
             {
                 string fileName = node.SelectSingleNode("file").InnerText;
 
+                if(!ComicFileTypeExtensions.Matches(fileName))
+                {
+                    //invalid entry! This entry won't get put in the map, so when the stuff is saved back,
+                    //this data won't be included. In other words, this 'comic' entry gets deleted,
+                    //so it will be re-written when the the update() method is called.
+                    continue;
+                }
+
                 int issue = -1;
                 if (node.SelectSingleNode("issue") != null)
                 {
                     bool result = int.TryParse(node.SelectSingleNode("issue").InnerText, out issue);
                     if(!result)
                     {
-                        //Bad data! This entry won't get put in the map, so when the stuff is saved back,
-                        //this data won't be included. In other words, this 'comic' entry gets deleted,
-                        //so it will be re-written when the the update() method is called.
+                        //Bad data!
                         continue;
                     }
                 }
@@ -91,15 +97,11 @@ namespace ComicBrowser
 
         private void loadNewFiles()
         {
-            string directory = new FileInfo(file).Directory.FullName;
             string[] files = Directory.GetFiles(directory);
 
-            for(int ii = 0; ii < files.Length; ii++)
+            foreach(string file in files)
             {
-                if(!comics.ContainsKey(files[ii]))
-                {
-                    comics.Add(files[ii], new Comic(files[ii]));
-                }
+
             }
         }
 
