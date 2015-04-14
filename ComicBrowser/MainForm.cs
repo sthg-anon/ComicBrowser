@@ -41,7 +41,8 @@ namespace ComicBrowser
             //    }
             //}
 
-            CBXml cbxmlFile = new CBXml(getArgFile());
+            string file = getArgFile();
+            CBXml root = new CBXml(file.Equals(String.Empty) ? "comics.xml" : file);
         }
 
 

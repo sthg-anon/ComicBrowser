@@ -8,7 +8,6 @@ namespace ComicBrowser
     class CBXml
     {
         private const string CBXML_EXTENSION = ".xml";
-        private const string DEFAULT_CBXML = "comics" + CBXML_EXTENSION;
 
         private readonly string file;
         private readonly string directory;
@@ -20,29 +19,13 @@ namespace ComicBrowser
 
         public CBXml(string inputFile)
         {
-            if(inputFile.Equals(String.Empty))
+            if(FileUtils.IsDirectory(inputFile))
             {
-                this.file = DEFAULT_CBXML;
-                this.directory = Directory.GetCurrentDirectory();
+                throw new FileNotFoundException(String.Format("{0} is not a file!", inputFile));
             }
-            else if(FileUtils.IsDirectory(inputFile))
-            {
-                this.directory = inputFile;
-                string foundFile = findCBXML(directory);
-                if(foundFile.Equals(String.Empty))
-                {
-                    this.file = DEFAULT_CBXML;
-                }
-                else
-                {
-                    this.file = foundFile;
-                }
-            }
-            else
-            {
-                this.directory = new FileInfo(file).Directory.FullName;
-                this.file = inputFile;
-            }
+
+            this.directory = new FileInfo(file).Directory.FullName;
+            this.file = inputFile;
 
             bool isNewFile = !File.Exists(file);
 
@@ -58,7 +41,6 @@ namespace ComicBrowser
                     xml.Load(fs);//TODO: catch exception
 
                     this.comics = read(xml);
-
                 }
             }
 
@@ -172,6 +154,16 @@ namespace ComicBrowser
             Dictionary<string, CBXml> children = new Dictionary<string, CBXml>();
             string[] directories = Directory.GetDirectories(directory);
 
+            foreach(string dir in directories)
+            {
+                string childPath = Path.Combine(directory, dir);
+                string cbxml = findCBXML(childPath);
+                if(!cbxml.Equals(String.Empty))
+                {
+                    string dirName = new DirectoryInfo(dir).Name;
+                    children.Add(dirName, new CBXml(dir));
+                }
+            }
 
             return children;
         }
