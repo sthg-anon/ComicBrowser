@@ -12,8 +12,9 @@ namespace ComicBrowser
         public event EventHandler OnFileSelect;
 
         private const string FILE_NAME = "history.xml";
+        private const int HISTORY_LENGTH = 10;
 
-        private readonly Stack<string> history = new Stack<string>();
+        private readonly LinkedList<string> history = new LinkedList<string>();
 
         private int width = 100;
         private Graphics graphics;
@@ -46,23 +47,10 @@ namespace ComicBrowser
                     {
                         XmlElement element = (XmlElement)child;
                         string fileName = element.InnerXml;
-                        history.Push(fileName);
+                        history.AddLast(fileName);
                         adjustWidth(fileName);
                     }
                 }
-            }
-
-            flipStack();
-        }
-
-        private void flipStack()
-        {
-            List<string> temp = new List<string>(history);
-            history.Clear();
-            
-            for (int ii = 0; ii < temp.Count; ii++)
-            {
-                history.Push(temp[ii]);
             }
         }
 
@@ -75,11 +63,32 @@ namespace ComicBrowser
             }
         }
 
+        public void Remove(string item)
+        {
+            history.Remove(item);
+        }
+
         public void OpenFile(string file)
         {
-            adjustWidth(file);
+            if (history.Last.Equals(file))
+            {
+                return;
+            }
+            else if (history.Contains(file))
+            {
+                history.Remove(file);
+            }
+            else
+            {
+                adjustWidth(file);
+            }
 
-            history.Push(file);
+            history.AddFirst(file);
+            if(history.Count > HISTORY_LENGTH)
+            {
+                history.RemoveLast();
+            }
+            
             using (FileStream fs = new FileStream(FILE_NAME, FileMode.Create, FileAccess.Write))
             {
                 XmlTextWriter writer = new XmlTextWriter(fs, System.Text.Encoding.UTF8);
@@ -89,7 +98,6 @@ namespace ComicBrowser
 
                 foreach(string openedFile in history)
                 {
-                    Console.WriteLine("saving file {0}", openedFile);
                     writer.WriteElementString("file", openedFile);
                 }
 
@@ -109,7 +117,7 @@ namespace ComicBrowser
                 entries[index] = new ToolStripButton();
                 entries[index].Width = width;
                 entries[index].Text = entry;
-                entries[index].Click += OnFileSelect;// (sender, args) => OnFileSelect(entries[index].Text);
+                entries[index].Click += OnFileSelect;
                 index++;
             }
 

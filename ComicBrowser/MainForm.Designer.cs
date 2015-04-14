@@ -34,7 +34,12 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.recentLibrariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
+            this.rootSplitContainer = new System.Windows.Forms.SplitContainer();
+            this.treeView = new System.Windows.Forms.TreeView();
             this.menuStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.rootSplitContainer)).BeginInit();
+            this.rootSplitContainer.Panel1.SuspendLayout();
+            this.rootSplitContainer.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -79,11 +84,37 @@
             // 
             this.openFileDialog.FileName = "openFileDialog";
             // 
+            // rootSplitContainer
+            // 
+            this.rootSplitContainer.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rootSplitContainer.Location = new System.Drawing.Point(0, 24);
+            this.rootSplitContainer.Name = "rootSplitContainer";
+            // 
+            // rootSplitContainer.Panel1
+            // 
+            this.rootSplitContainer.Panel1.Controls.Add(this.treeView);
+            this.rootSplitContainer.Size = new System.Drawing.Size(899, 399);
+            this.rootSplitContainer.SplitterDistance = 211;
+            this.rootSplitContainer.TabIndex = 1;
+            // 
+            // treeView
+            // 
+            this.treeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.treeView.Location = new System.Drawing.Point(3, 3);
+            this.treeView.Name = "treeView";
+            this.treeView.Size = new System.Drawing.Size(205, 393);
+            this.treeView.TabIndex = 0;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(899, 423);
+            this.Controls.Add(this.rootSplitContainer);
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MainForm";
@@ -92,6 +123,9 @@
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
+            this.rootSplitContainer.Panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.rootSplitContainer)).EndInit();
+            this.rootSplitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -105,6 +139,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem recentLibrariesToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
+        private System.Windows.Forms.SplitContainer rootSplitContainer;
+        private System.Windows.Forms.TreeView treeView;
 
     }
 }

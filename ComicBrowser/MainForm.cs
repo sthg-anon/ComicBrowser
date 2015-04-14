@@ -10,6 +10,7 @@ namespace ComicBrowser
     public partial class MainForm : Form
     {
         private FileOpenHistory history;
+        private CBXml root = null;
 
         public MainForm()
         {
@@ -21,19 +22,37 @@ namespace ComicBrowser
             Console.WriteLine("current directory: {0}", Directory.GetCurrentDirectory());
             this.history = new FileOpenHistory(this.CreateGraphics(), this.Font);
 
-            history.OnFileSelect += (s, ea) =>
-                {
-                    ToolStripButton tsb = (ToolStripButton)s;
-                    Console.WriteLine(tsb.Text);
-                };
+            history.OnFileSelect += this.onFileHistorySelect;
 
-            openFileDialog.Filter = CBXml.getFileFilter();
+           // openFileDialog.Filter = CBXml.getFileFilter();
 
-            CBXml root = new CBXml(getArgFile());
+            open(getArgFile());
+        }
+
+        private void open(string file)
+        {
+            root = new CBXml(file);
             root.Save();
             root.PrintTree(0);
 
             updateHistoryDropdown();
+        }
+
+        private void onFileHistorySelect(object sender, EventArgs e)
+        {
+            ToolStripButton tsb = (ToolStripButton)sender;
+            string file = tsb.Text;
+            
+            if(!File.Exists(file))
+            {
+                history.Remove(file);
+                MessageBox.Show(String.Format("{0} no longer exists!", file), "File not found!", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                updateHistoryDropdown();
+            }
+            else
+            {
+                open(file);
+            }
         }
 
         private void updateHistoryDropdown()
