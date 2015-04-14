@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace ComicBrowser
 {
-    class FileOpenHistory
+    class FileOpenHistory : IDisposable
     {
         public event EventHandler OnFileSelect;
 
@@ -114,6 +114,11 @@ namespace ComicBrowser
             }
 
             return entries;
+        }
+
+        public void Dispose()
+        {
+            graphics.Dispose();
         }
     }
 }

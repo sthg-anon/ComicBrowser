@@ -84,5 +84,10 @@ namespace ComicBrowser
                 updateHistoryDropdown();
             }
         }
+
+        void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            history.Dispose();
+        }
     }
 }
