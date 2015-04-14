@@ -160,7 +160,7 @@ namespace ComicBrowser
             Console.WriteLine("{0}: ", directory);
             foreach(CBXml xml in ChildXMLs.Values)
             {
-                xml.PrintTree(level + 1);
+                xml.PrintTree(level + 4);
             }
         }
 
