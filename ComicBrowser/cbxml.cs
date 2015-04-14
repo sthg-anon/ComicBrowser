@@ -46,7 +46,6 @@ namespace ComicBrowser
 
             printComics();
             loadNewFiles();
-            Save();
 
             ChildXMLs = new Dictionary<string, CBXml>();
         }
@@ -146,6 +145,11 @@ namespace ComicBrowser
                 writer.WriteEndElement();//"comics"
                 writer.WriteEndDocument();
                 writer.Flush();
+            }
+
+            foreach(CBXml child in ChildXMLs.Values)
+            {
+                child.Save();
             }
         }
 

@@ -43,6 +43,7 @@ namespace ComicBrowser
 
             string file = getArgFile();
             CBXml root = new CBXml(file.Equals(String.Empty) ? "comics.xml" : file);
+            root.Save();
         }
 
 
