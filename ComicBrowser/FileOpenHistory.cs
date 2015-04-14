@@ -9,7 +9,6 @@ namespace ComicBrowser
 {
     class FileOpenHistory
     {
-       // public delegate void FileSelectHandler(string file);
         public event EventHandler OnFileSelect;
 
         private const string FILE_NAME = "history.xml";
