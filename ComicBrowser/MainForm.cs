@@ -24,7 +24,7 @@ namespace ComicBrowser
 
             history.OnFileSelect += this.onFileHistorySelect;
 
-           // openFileDialog.Filter = CBXml.getFileFilter();
+            openFileDialog.Filter = CBXml.getFileFilter();
 
             open(getArgFile());
         }
@@ -33,9 +33,11 @@ namespace ComicBrowser
         {
             root = new CBXml(file);
             root.Save();
-            root.PrintTree(0);
+            //root.PrintTree(0);
 
             updateHistoryDropdown();
+
+            populateTreeView();
         }
 
         private void onFileHistorySelect(object sender, EventArgs e)
@@ -109,6 +111,14 @@ namespace ComicBrowser
         void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             history.Dispose();
+        }
+
+        private void populateTreeView()
+        {
+            if (root == null) return;
+
+            treeView.Nodes.Add(root.GetNode());
+            treeView.ExpandAll();
         }
     }
 }

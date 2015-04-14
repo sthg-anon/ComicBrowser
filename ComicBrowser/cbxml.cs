@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Forms;
 using System.Xml;
 
 namespace ComicBrowser
@@ -9,7 +10,9 @@ namespace ComicBrowser
     {
         private const string CBXML_EXTENSION = ".xml";
         private const string DEFAULT_CBXML = "comics" + CBXML_EXTENSION;
+        private const string ROOT_NODE_NAME = "root";
 
+        private readonly bool isRoot;
         private readonly string file;
         private readonly string directory;
          //file name relative to directory, comic
@@ -18,10 +21,11 @@ namespace ComicBrowser
                                   //folder, child xml
         public Dictionary<string, CBXml> ChildXMLs { get; private set; }
 
-        public CBXml(string inputFile) : this(inputFile, Directory.GetCurrentDirectory()) { }
+        public CBXml(string inputFile) : this(inputFile, Directory.GetCurrentDirectory(), true) { }
 
-        public CBXml(string inputFile, string directory)
+        public CBXml(string inputFile, string directory, bool root)
         {
+            this.isRoot = root;
             this.file = inputFile.Equals(String.Empty) ? DEFAULT_CBXML : inputFile;
             this.directory = directory;
 
@@ -174,7 +178,7 @@ namespace ComicBrowser
                 if(!cbxml.Equals(String.Empty))
                 {
                     string dirName = new DirectoryInfo(dir).Name;
-                    children.Add(dirName, new CBXml(cbxml, dir));
+                    children.Add(dirName, new CBXml(cbxml, dir, false));
                 }
             }
 
@@ -268,6 +272,25 @@ namespace ComicBrowser
         public static string getFileFilter()
         {
             return String.Format("Comic File Library (*{0})|*{1};", CBXML_EXTENSION, CBXML_EXTENSION);
+        }
+
+        public TreeNode GetNode()
+        {
+            string dirName = new DirectoryInfo(directory).Name;
+            if(ChildXMLs.Count == 0)
+            {
+                return new TreeNode(dirName);
+            }
+
+            TreeNode[] nodes = new TreeNode[ChildXMLs.Count];
+            int index = 0;
+            foreach(CBXml child in ChildXMLs.Values)
+            {
+                nodes[index] = child.GetNode();
+                index++;
+            }
+
+            return new TreeNode(isRoot ? ROOT_NODE_NAME : dirName, nodes);
         }
     }
 }
