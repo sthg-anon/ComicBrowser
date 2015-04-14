@@ -1,6 +1,7 @@
 ﻿
 using SharpCompress.Archive;
 using System;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 
@@ -8,6 +9,7 @@ namespace ComicBrowser
 {
     public partial class MainForm : Form
     {
+        private FileOpenHistory history;
 
         public MainForm()
         {
@@ -17,12 +19,26 @@ namespace ComicBrowser
         private void MainForm_Load(object sender, EventArgs e)
         {
             Console.WriteLine("current directory: {0}", Directory.GetCurrentDirectory());
+            this.history = new FileOpenHistory(this.CreateGraphics(), this.Font);
+
+            history.OnFileSelect += (s, ea) =>
+                {
+                    ToolStripButton tsb = (ToolStripButton)s;
+                    Console.WriteLine(tsb.Text);
+                };
 
             CBXml root = new CBXml(getArgFile());
             root.Save();
             root.PrintTree(0);
+
+            updateHistoryDropdown();
         }
 
+        private void updateHistoryDropdown()
+        {
+            recentLibrariesToolStripMenuItem.DropDownItems.Clear();
+            recentLibrariesToolStripMenuItem.DropDownItems.AddRange(history.getEntries());
+        }
 
         private static string getArgFile()
         {
@@ -56,6 +72,17 @@ namespace ComicBrowser
             }
 
             return file;
+        }
+
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            DialogResult result = openFileDialog.ShowDialog();
+            if(result == DialogResult.OK)
+            {
+                string file = openFileDialog.FileName;
+                history.OpenFile(file);
+                updateHistoryDropdown();
+            }
         }
     }
 }

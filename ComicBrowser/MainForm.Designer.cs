@@ -32,6 +32,8 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.recentLibrariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -49,7 +51,8 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
-            this.toolStripSeparator1});
+            this.toolStripSeparator1,
+            this.recentLibrariesToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
@@ -57,13 +60,24 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
             this.openToolStripMenuItem.Text = "Open";
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(154, 6);
+            // 
+            // recentLibrariesToolStripMenuItem
+            // 
+            this.recentLibrariesToolStripMenuItem.Name = "recentLibrariesToolStripMenuItem";
+            this.recentLibrariesToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.recentLibrariesToolStripMenuItem.Text = "Recent Libraries";
+            // 
+            // openFileDialog
+            // 
+            this.openFileDialog.FileName = "openFileDialog";
             // 
             // MainForm
             // 
@@ -88,6 +102,8 @@
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem recentLibrariesToolStripMenuItem;
+        private System.Windows.Forms.OpenFileDialog openFileDialog;
 
     }
 }

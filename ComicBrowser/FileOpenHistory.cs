@@ -9,6 +9,9 @@ namespace ComicBrowser
 {
     class FileOpenHistory
     {
+       // public delegate void FileSelectHandler(string file);
+        public event EventHandler OnFileSelect;
+
         private const string FILE_NAME = "history.xml";
 
         private readonly Stack<string> history = new Stack<string>();
@@ -55,14 +58,11 @@ namespace ComicBrowser
 
         private void flipStack()
         {
-            Console.WriteLine("Stack length: {0}", history.Count);
             List<string> temp = new List<string>(history);
-            Console.WriteLine("temp length: {0}", temp.Count);
             history.Clear();
             
             for (int ii = 0; ii < temp.Count; ii++)
             {
-                Console.WriteLine("Adding {0}", temp[ii]);
                 history.Push(temp[ii]);
             }
         }
@@ -110,6 +110,7 @@ namespace ComicBrowser
                 entries[index] = new ToolStripButton();
                 entries[index].Width = width;
                 entries[index].Text = entry;
+                entries[index].Click += OnFileSelect;// (sender, args) => OnFileSelect(entries[index].Text);
                 index++;
             }
 
