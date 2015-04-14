@@ -8,23 +8,43 @@ namespace ComicBrowser
     class CBXml
     {
         private const string CBXML_EXTENSION = ".xml";
+        private const string DEFAULT_CBXML = "comics.xml";
 
         private readonly string file;
+        private readonly string directory;
          //file name relative to directory, comic
         private readonly Dictionary<string, Comic> comics;
+
                                   //folder, child xml
-        private readonly Dictionary<string, CBXml> childXMLs = new Dictionary<string, CBXml>();
+        public Dictionary<string, CBXml> ChildXMLs { get; private set; }
 
-        public CBXml(string file)
+        public CBXml(string inputFile)
         {
-            bool isNewFile = !File.Exists(file);
-
-            if (!isNewFile && FileUtils.IsDirectory(file))
+            if(inputFile.Equals(String.Empty))
             {
-                throw new FileNotFoundException(String.Format("{0} is not a file!", file));
+                this.file = DEFAULT_CBXML;
+                this.directory = Directory.GetCurrentDirectory();
+            }
+            else if(FileUtils.IsDirectory(inputFile))
+            {
+                this.directory = inputFile;
+                string foundFile = findCBXML(directory);
+                if(foundFile.Equals(String.Empty))
+                {
+                    this.file = DEFAULT_CBXML;
+                }
+                else
+                {
+                    this.file = foundFile;
+                }
+            }
+            else
+            {
+                this.directory = new FileInfo(file).Directory.FullName;
+                this.file = inputFile;
             }
 
-            this.file = file;
+            bool isNewFile = !File.Exists(file);
 
             if (isNewFile)
             {
@@ -45,6 +65,8 @@ namespace ComicBrowser
             printComics();
             loadNewFiles();
             Save();
+
+            ChildXMLs = new Dictionary<string, CBXml>();
         }
 
         private Dictionary<string, Comic> read(XmlDocument xml)
@@ -96,7 +118,6 @@ namespace ComicBrowser
 
         private void loadNewFiles()
         {
-            string directory = new FileInfo(file).Directory.FullName;
             string[] files = Directory.GetFiles(directory);
 
             foreach(string f in files)
@@ -146,6 +167,15 @@ namespace ComicBrowser
             }
         }
 
+        private Dictionary<string, CBXml> loadChildren()
+        {
+            Dictionary<string, CBXml> children = new Dictionary<string, CBXml>();
+            string[] directories = Directory.GetDirectories(directory);
+
+
+            return children;
+        }
+
         private void printComics()
         {
             foreach (KeyValuePair<string, Comic> entry in comics)
@@ -170,6 +200,39 @@ namespace ComicBrowser
         public static string GetFileExtension()
         {
             return CBXML_EXTENSION;
+        }
+
+        /// <summary>
+        /// Locates the .cbxml file in the working direcctory, if there is ONE.
+        /// If there is more than one .cbxml file, then neither will be returned, due to the
+        /// ambiguity.
+        /// 
+        /// If the user inputted the CBXML file as the first argument, it will also be returned by this function.
+        /// </summary>
+        /// <returns>The path to the .cbxml file, if there is one.</returns>
+        private static string findCBXML(string currentFolder)
+        {
+            //string currentFolder = Directory.GetCurrentDirectory();
+            string[] files = Directory.GetFiles(currentFolder);
+
+            string cbXML = String.Empty;
+
+            for (int ii = 0; ii < files.Length; ii++)
+            {
+                if (FileUtils.IsDirectory(files[ii]) || !CBXml.FileExtensionMatches(files[ii]))
+                {
+                    continue;
+                }
+
+                if (!cbXML.Equals(String.Empty))
+                {
+                    return String.Empty;
+                }
+
+                cbXML = files[ii];
+            }
+
+            return cbXML;
         }
     }
 }

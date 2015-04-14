@@ -16,17 +16,17 @@ namespace ComicBrowser
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            string cbXML = findCBXML();
-            Console.WriteLine("CBXML: {0}", cbXML);
-            label1.Text = cbXML;
+            //string cbXML = findCBXML();
+            //Console.WriteLine("CBXML: {0}", cbXML);
+            //label1.Text = cbXML;
 
             Console.WriteLine("current directory: {0}", Directory.GetCurrentDirectory());
 
-            if(cbXML.Equals(String.Empty)) //no cbxml found
-            {
-                cbXML = Path.Combine(Directory.GetCurrentDirectory(), String.Format("comics{0}", CBXml.GetFileExtension()));
-                Console.WriteLine("cbxml not found, so one was made with {0}", cbXML);
-            }
+            //if(cbXML.Equals(String.Empty)) //no cbxml found
+            //{
+            //    cbXML = Path.Combine(Directory.GetCurrentDirectory(), String.Format("comics{0}", CBXml.GetFileExtension()));
+            //    Console.WriteLine("cbxml not found, so one was made with {0}", cbXML);
+            //}
 
             //string file = @"D:\desktop\#269.cbz";
             //string file = @"D:\desktop\test.zip";
@@ -41,49 +41,11 @@ namespace ComicBrowser
             //    }
             //}
 
-            CBXml cbxmlFile = new CBXml(cbXML);
+            CBXml cbxmlFile = new CBXml(getArgFile());
         }
 
-        /// <summary>
-        /// Locates the .cbxml file in the working direcctory, if there is ONE.
-        /// If there is more than one .cbxml file, then neither will be returned, due to the
-        /// ambiguity.
-        /// 
-        /// If the user inputted the CBXML file as the first argument, it will also be returned by this function.
-        /// </summary>
-        /// <returns>The path to the .cbxml file, if there is one.</returns>
-        private string findCBXML()
-        {
-            string argFile = getArgFile();
-            if (!argFile.Equals(String.Empty))
-            {
-                return argFile;
-            }
 
-            string currentFolder = Directory.GetCurrentDirectory();
-            string[] files = Directory.GetFiles(currentFolder);
-
-            string cbXML = String.Empty;
-
-            for(int ii = 0; ii < files.Length; ii++)
-            {
-                if(FileUtils.IsDirectory(files[ii]) || !CBXml.FileExtensionMatches(files[ii]))
-                {
-                    continue;
-                }
-
-                if(!cbXML.Equals(String.Empty))
-                {
-                    return String.Empty;
-                }
-
-                cbXML = files[ii];
-            }
-
-            return cbXML;
-        }
-
-        private string getArgFile()
+        private static string getArgFile()
         {
             string[] args = Environment.GetCommandLineArgs();
             if (args.Length <= 1)
@@ -92,12 +54,12 @@ namespace ComicBrowser
             }
 
             string file = args[1];
-            if(FileUtils.IsDirectory(file))
+            if (FileUtils.IsDirectory(file))
             {
                 MessageBox.Show(String.Format("{0} is a file path!", file),
-                    "File Input Error", 
-                    MessageBoxButtons.OK, 
-                    MessageBoxIcon.Error, 
+                    "File Input Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error,
                     MessageBoxDefaultButton.Button1);
 
                 Application.Exit();
