@@ -120,5 +120,17 @@ namespace ComicBrowser
             treeView.Nodes.Add(root.GetNode());
             treeView.ExpandAll();
         }
+
+        private void treeView_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            TreeNode node = treeView.SelectedNode;
+            CBXml cbxml = node.GetCBXml();
+            cbxml.PrintTree(0);
+        }
+
+        private void treeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
+        {
+            e.Cancel = true;
+        }
     }
 }

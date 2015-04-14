@@ -276,21 +276,28 @@ namespace ComicBrowser
 
         public TreeNode GetNode()
         {
+            TreeNode node = null;
             string dirName = new DirectoryInfo(directory).Name;
             if(ChildXMLs.Count == 0)
             {
-                return new TreeNode(dirName);
+                node = new TreeNode(dirName);
             }
-
-            TreeNode[] nodes = new TreeNode[ChildXMLs.Count];
-            int index = 0;
-            foreach(CBXml child in ChildXMLs.Values)
+            else
             {
-                nodes[index] = child.GetNode();
-                index++;
+                TreeNode[] nodes = new TreeNode[ChildXMLs.Count];
+                int index = 0;
+                foreach (CBXml child in ChildXMLs.Values)
+                {
+                    nodes[index] = child.GetNode();
+                    index++;
+                }
+
+                node = new TreeNode(isRoot ? ROOT_NODE_NAME : dirName, nodes);
             }
 
-            return new TreeNode(isRoot ? ROOT_NODE_NAME : dirName, nodes);
+            node.AddPairing(this);
+
+            return node;
         }
     }
 }
