@@ -264,5 +264,10 @@ namespace ComicBrowser
 
             return cbXML;
         }
+
+        public static string getFileFilter()
+        {
+            return String.Format("Comic File Library (*{0})|*{1};", CBXML_EXTENSION, CBXML_EXTENSION);
+        }
     }
 }

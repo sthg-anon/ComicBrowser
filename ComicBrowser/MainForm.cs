@@ -27,6 +27,8 @@ namespace ComicBrowser
                     Console.WriteLine(tsb.Text);
                 };
 
+            openFileDialog.Filter = CBXml.getFileFilter();
+
             CBXml root = new CBXml(getArgFile());
             root.Save();
             root.PrintTree(0);

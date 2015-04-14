@@ -42,5 +42,24 @@ namespace ComicBrowser
 
             return false;
         }
+
+        //public static string GetFilter()
+        //{
+        //    StringBuilder sb = new StringBuilder("Comic Files (");
+        //    foreach (ComicFileType type in Enum.GetValues(typeof(ComicFileType)))
+        //    {
+        //        string extension = type.StringValue();
+        //        sb.Append("*").Append(extension).Append(", ");
+        //    }
+        //    sb.Length -= 2;
+        //    sb.Append(")|");
+        //    foreach (ComicFileType type in Enum.GetValues(typeof(ComicFileType)))
+        //    {
+        //        string extension = type.StringValue();
+        //        sb.Append("*").Append(extension).Append(";");
+        //    }
+        //    sb.Length -= 1;
+        //    return sb.ToString();
+        //}
     }
 }
