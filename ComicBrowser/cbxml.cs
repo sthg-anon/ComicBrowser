@@ -7,52 +7,49 @@ namespace ComicBrowser
 {
     class CBXml
     {
-        private const string CBXML_EXTENSION = ".cbxml";
+        private const string CBXML_EXTENSION = ".xml";
 
         private readonly string directory;
-        private readonly XmlDocument xml = new XmlDocument();
          //file name relative to directory, comic
-        private readonly Dictionary<string, Comic> comics = new Dictionary<string, Comic>();
+        private readonly Dictionary<string, Comic> comics;
+                                  //folder, child xml
+        private readonly Dictionary<string, CBXml> childXMLs = new Dictionary<string, CBXml>();
 
         public CBXml(string file)
         {
-            if (FileUtils.IsDirectory(file))
+            bool isNewFile = !File.Exists(file);
+
+            if (!isNewFile && FileUtils.IsDirectory(file))
             {
                 throw new FileNotFoundException(String.Format("{0} is not a file!", file));
             }
 
             directory = new FileInfo(file).Directory.FullName;
 
-            bool fileExists = File.Exists(file);
-
-            FileStream fs = new FileStream(file, FileMode.OpenOrCreate, FileAccess.Read);
-            xml.Load(fs);//TODO: catch exception
-            
-
-            if(fileExists)
+            if (isNewFile)
             {
-                read();
+                this.comics = new Dictionary<string, Comic>();
             }
-
-            foreach(KeyValuePair<string, Comic> entry in comics)
+            else
             {
-                Console.WriteLine("Comic: {0}", entry.Key);
-                Comic comic = entry.Value;
-                Console.WriteLine("  file: {0}\n  issue: {1}\n  tags:", comic.File, comic.Issue);
-                HashSet<string> tags = comic.Tags;
-                foreach(string tag in tags)
+                using(FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
                 {
-                    Console.WriteLine("    tag: {0}", tag);
+                    XmlDocument xml = new XmlDocument();
+                    xml.Load(fs);//TODO: catch exception
+
+                    this.comics = read(xml);
+
                 }
             }
 
+            printComics();
             loadNewFiles();
-
-            Save();
+            Save(file);
         }
 
-        private void read()
+        private Dictionary<string, Comic> read(XmlDocument xml)
         {
+            Dictionary<string, Comic> dic = new Dictionary<string, Comic>();
             XmlNodeList nodeList = xml.DocumentElement.SelectNodes("/comics/comic");
             foreach(XmlNode node in nodeList)
             {
@@ -72,7 +69,7 @@ namespace ComicBrowser
                     bool result = int.TryParse(node.SelectSingleNode("issue").InnerText, out issue);
                     if(!result)
                     {
-                        //Bad data!
+                        //Bad data! (The issue was not an int)
                         continue;
                     }
                 }
@@ -91,8 +88,9 @@ namespace ComicBrowser
                     }
                 }
 
-                comics.Add(fileName, new Comic(fileName, issue, tags));
+                dic.Add(fileName, new Comic(fileName, issue, tags));
             }
+            return dic;
         }
 
         private void loadNewFiles()
@@ -101,13 +99,49 @@ namespace ComicBrowser
 
             foreach(string file in files)
             {
+                string fileName = Path.GetFileName(file);
 
+                if (!ComicFileTypeExtensions.Matches(fileName) || comics.ContainsKey(fileName))
+                {
+                    continue;
+                }
+                comics.Add(fileName, new Comic(fileName));
             }
         }
 
-        public void Save()
+        public void Save(string file)
         {
+            using(FileStream fs = new FileStream(file, FileMode.Create, FileAccess.Write))
+            {
+                XmlTextWriter writer = new XmlTextWriter(fs, System.Text.Encoding.Default);
+                writer.Formatting = Formatting.Indented;
+                writer.WriteStartDocument();
+                writer.WriteStartElement("comics");
+                foreach(Comic comic in comics.Values)
+                {
+                    writer.WriteStartElement("comic");
+                    writer.WriteElementString("file", comic.File);
+                    writer.WriteEndElement();
+                }
+                writer.WriteEndElement();
+                writer.WriteEndDocument();
+                writer.Flush();
+            }
+        }
 
+        private void printComics()
+        {
+            foreach (KeyValuePair<string, Comic> entry in comics)
+            {
+                Console.WriteLine("Comic: {0}", entry.Key);
+                Comic comic = entry.Value;
+                Console.WriteLine("  file: {0}\n  issue: {1}\n  tags:", comic.File, comic.Issue);
+                HashSet<string> tags = comic.Tags;
+                foreach (string tag in tags)
+                {
+                    Console.WriteLine("    tag: {0}", tag);
+                }
+            }
         }
 
         public static bool FileExtensionMatches(string file)

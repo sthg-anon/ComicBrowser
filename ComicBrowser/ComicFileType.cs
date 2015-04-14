@@ -15,7 +15,7 @@ namespace ComicBrowser
 
     static class ComicFileTypeExtensions
     {
-        public static string ToString(this ComicFileType type)
+        public static string StringValue(this ComicFileType type)
         {
             switch(type)
             {
@@ -34,7 +34,7 @@ namespace ComicBrowser
 
             foreach(ComicFileType type in Enum.GetValues(typeof(ComicFileType)))
             {
-                if(extension.Equals(type.ToString()))
+                if (extension.Equals(type.StringValue()))
                 {
                     return true;
                 }
