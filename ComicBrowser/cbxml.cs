@@ -8,7 +8,7 @@ namespace ComicBrowser
     class CBXml
     {
         private const string CBXML_EXTENSION = ".xml";
-        private const string DEFAULT_CBXML = "comics.xml";
+        private const string DEFAULT_CBXML = "comics" + CBXML_EXTENSION;
 
         private readonly string file;
         private readonly string directory;
