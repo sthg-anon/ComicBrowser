@@ -23,9 +23,7 @@ namespace ComicBrowser
         public CBXml(string inputFile, string directory)
         {
             this.file = inputFile.Equals(String.Empty) ? DEFAULT_CBXML : inputFile;
-
             this.directory = directory;
-            this.file = inputFile;
 
             if (!File.Exists(file))
             {
@@ -42,7 +40,7 @@ namespace ComicBrowser
                 }
             }
 
-            printComics();
+           // printComics();
             loadNewFiles();
 
             ChildXMLs = loadChildren();

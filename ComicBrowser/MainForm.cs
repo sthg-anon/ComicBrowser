@@ -41,8 +41,7 @@ namespace ComicBrowser
             //    }
             //}
 
-            string file = getArgFile();
-            CBXml root = new CBXml(file.Equals(String.Empty) ? CBXml.GetDefaultCBXML() : file);
+            CBXml root = new CBXml(getArgFile());
             root.Save();
             root.PrintTree(0);
         }
