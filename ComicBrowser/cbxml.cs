@@ -8,6 +8,7 @@ namespace ComicBrowser
     class CBXml
     {
         private const string CBXML_EXTENSION = ".xml";
+        private const string DEFAULT_CBXML = "comics" + CBXML_EXTENSION;
 
         private readonly string file;
         private readonly string directory;
@@ -17,19 +18,16 @@ namespace ComicBrowser
                                   //folder, child xml
         public Dictionary<string, CBXml> ChildXMLs { get; private set; }
 
-        public CBXml(string inputFile)
-        {
-            if(FileUtils.IsDirectory(inputFile))
-            {
-                throw new FileNotFoundException(String.Format("{0} is not a file!", inputFile));
-            }
+        public CBXml(string inputFile) : this(inputFile, Directory.GetCurrentDirectory()) { }
 
-            this.directory = new FileInfo(file).Directory.FullName;
+        public CBXml(string inputFile, string directory)
+        {
+            this.file = inputFile.Equals(String.Empty) ? DEFAULT_CBXML : inputFile;
+
+            this.directory = directory;
             this.file = inputFile;
 
-            bool isNewFile = !File.Exists(file);
-
-            if (isNewFile)
+            if (!File.Exists(file))
             {
                 this.comics = new Dictionary<string, Comic>();
             }
@@ -47,7 +45,7 @@ namespace ComicBrowser
             printComics();
             loadNewFiles();
 
-            ChildXMLs = new Dictionary<string, CBXml>();
+            ChildXMLs = loadChildren();
         }
 
         private Dictionary<string, Comic> read(XmlDocument xml)
@@ -153,6 +151,19 @@ namespace ComicBrowser
             }
         }
 
+        public void PrintTree(int level)
+        {
+            for (int ii = 0; ii < level; ii++)
+            {
+                Console.Write(" ");
+            }
+            Console.WriteLine("{0}: ", directory);
+            foreach(CBXml xml in ChildXMLs.Values)
+            {
+                xml.PrintTree(level + 1);
+            }
+        }
+
         private Dictionary<string, CBXml> loadChildren()
         {
             Dictionary<string, CBXml> children = new Dictionary<string, CBXml>();
@@ -161,11 +172,11 @@ namespace ComicBrowser
             foreach(string dir in directories)
             {
                 string childPath = Path.Combine(directory, dir);
-                string cbxml = findCBXML(childPath);
+                string cbxml = getChildCbxml(childPath);
                 if(!cbxml.Equals(String.Empty))
                 {
                     string dirName = new DirectoryInfo(dir).Name;
-                    children.Add(dirName, new CBXml(dir));
+                    children.Add(dirName, new CBXml(cbxml, dir));
                 }
             }
 
@@ -196,6 +207,31 @@ namespace ComicBrowser
         public static string GetFileExtension()
         {
             return CBXML_EXTENSION;
+        }
+
+        public static string GetDefaultCBXML()
+        {
+            return DEFAULT_CBXML;
+        }
+
+        private static string getChildCbxml(string childPath)
+        {
+            string cbxml = findCBXML(childPath);
+            if (!cbxml.Equals(String.Empty))
+            {
+                return cbxml;
+            }
+
+            string[] files = Directory.GetFiles(childPath);
+            foreach (string childFile in files)
+            {
+                if (ComicFileTypeExtensions.Matches(childFile))
+                {
+                    return Path.Combine(childPath, DEFAULT_CBXML);
+                }
+            }
+
+            return String.Empty;
         }
 
         /// <summary>
