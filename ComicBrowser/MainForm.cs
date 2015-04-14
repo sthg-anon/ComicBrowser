@@ -16,30 +16,7 @@ namespace ComicBrowser
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            //string cbXML = findCBXML();
-            //Console.WriteLine("CBXML: {0}", cbXML);
-            //label1.Text = cbXML;
-
             Console.WriteLine("current directory: {0}", Directory.GetCurrentDirectory());
-
-            //if(cbXML.Equals(String.Empty)) //no cbxml found
-            //{
-            //    cbXML = Path.Combine(Directory.GetCurrentDirectory(), String.Format("comics{0}", CBXml.GetFileExtension()));
-            //    Console.WriteLine("cbxml not found, so one was made with {0}", cbXML);
-            //}
-
-            //string file = @"D:\desktop\#269.cbz";
-            //string file = @"D:\desktop\test.zip";
-            //string file = @"D:\desktop\#46.cbr";
-
-            //var archive = ArchiveFactory.Open(file);
-            //foreach (var entry in archive.Entries)
-            //{
-            //    if (!entry.IsDirectory)
-            //    {
-            //        Console.WriteLine(entry.FilePath);
-            //    }
-            //}
 
             CBXml root = new CBXml(getArgFile());
             root.Save();
