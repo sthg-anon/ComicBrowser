@@ -9,7 +9,7 @@ namespace ComicBrowser
     {
         private const string CBXML_EXTENSION = ".xml";
 
-        private readonly string directory;
+        private readonly string file;
          //file name relative to directory, comic
         private readonly Dictionary<string, Comic> comics;
                                   //folder, child xml
@@ -24,7 +24,7 @@ namespace ComicBrowser
                 throw new FileNotFoundException(String.Format("{0} is not a file!", file));
             }
 
-            directory = new FileInfo(file).Directory.FullName;
+            this.file = file;
 
             if (isNewFile)
             {
@@ -44,7 +44,7 @@ namespace ComicBrowser
 
             printComics();
             loadNewFiles();
-            Save(file);
+            Save();
         }
 
         private Dictionary<string, Comic> read(XmlDocument xml)
@@ -96,11 +96,12 @@ namespace ComicBrowser
 
         private void loadNewFiles()
         {
+            string directory = new FileInfo(file).Directory.FullName;
             string[] files = Directory.GetFiles(directory);
 
-            foreach(string file in files)
+            foreach(string f in files)
             {
-                string fileName = Path.GetFileName(file);
+                string fileName = Path.GetFileName(f);
 
                 if (!ComicFileTypeExtensions.Matches(fileName) || comics.ContainsKey(fileName))
                 {
@@ -110,7 +111,7 @@ namespace ComicBrowser
             }
         }
 
-        public void Save(string file)
+        public void Save()
         {
             using (FileStream fs = new FileStream(file, FileMode.Create, FileAccess.Write))
             {
