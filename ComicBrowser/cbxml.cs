@@ -66,8 +66,9 @@ namespace ComicBrowser
                 int issue = -1;
                 if (node.SelectSingleNode("issue") != null)
                 {
-                    bool result = int.TryParse(node.SelectSingleNode("issue").InnerText, out issue);
-                    if(!result)
+                    string issueStr = node.SelectSingleNode("issue").InnerText;
+                    bool result = int.TryParse(issueStr, out issue);
+                    if (!result)
                     {
                         //Bad data! (The issue was not an int)
                         continue;
@@ -111,19 +112,34 @@ namespace ComicBrowser
 
         public void Save(string file)
         {
-            using(FileStream fs = new FileStream(file, FileMode.Create, FileAccess.Write))
+            using (FileStream fs = new FileStream(file, FileMode.Create, FileAccess.Write))
             {
-                XmlTextWriter writer = new XmlTextWriter(fs, System.Text.Encoding.Default);
+                XmlTextWriter writer = new XmlTextWriter(fs, System.Text.Encoding.UTF8);
                 writer.Formatting = Formatting.Indented;
                 writer.WriteStartDocument();
                 writer.WriteStartElement("comics");
-                foreach(Comic comic in comics.Values)
+                foreach (Comic comic in comics.Values)
                 {
                     writer.WriteStartElement("comic");
                     writer.WriteElementString("file", comic.File);
-                    writer.WriteEndElement();
+
+                    if(comic.Issue >= 0)
+                    {
+                        writer.WriteElementString("issue", comic.Issue.ToString());
+                    }
+
+                    if(comic.Tags.Count > 0)
+                    {
+                        writer.WriteStartElement("tags");
+                        foreach(string tag in comic.Tags)
+                        {
+                            writer.WriteElementString("tag", tag);
+                        }
+                        writer.WriteEndElement();//"tags"
+                    }
+                    writer.WriteEndElement();//"comic"
                 }
-                writer.WriteEndElement();
+                writer.WriteEndElement();//"comics"
                 writer.WriteEndDocument();
                 writer.Flush();
             }
