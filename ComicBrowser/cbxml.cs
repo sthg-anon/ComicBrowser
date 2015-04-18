@@ -24,11 +24,29 @@ namespace ComicBrowser
 
         public CBXml() : this(Directory.GetCurrentDirectory(), true) { }
 
-        public CBXml(string directory, bool root)
+        private CBXml(string directory, bool root)
         {
             this.isRoot = root;
             this.directory = directory;
             this.Valid = false;
+
+            if (root)
+            {
+                string potentialCBXML = findCBXML(directory);
+                if (!potentialCBXML.Equals(String.Empty))
+                {
+                    Open(potentialCBXML, false);
+                    this.Valid = true;
+                }
+                else
+                {
+                    this.Valid = false;
+                }
+            }
+            else
+            {
+                this.Valid = false;
+            }
         }
 
         private Dictionary<string, Comic> read(XmlDocument xml)

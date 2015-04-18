@@ -38,7 +38,13 @@ namespace ComicBrowser
         {
             root = new CBXml();
 
-            if(file.Equals(String.Empty))
+            if(root.Valid)
+            {
+                cbxmlPostOpen();
+                return;
+            }
+
+            if (file.Equals(String.Empty))
             {
                 return;
             }
@@ -47,11 +53,16 @@ namespace ComicBrowser
 
             if(root.Valid)
             {
-                root.Save();
-
-                //populate the tree view
-                populateTreeView();
+                cbxmlPostOpen();
             }
+        }
+
+        private void cbxmlPostOpen()
+        {
+            root.Save();
+
+            //populate the tree view
+            populateTreeView();
         }
 
         private void onFileHistorySelect(object sender, EventArgs e)
