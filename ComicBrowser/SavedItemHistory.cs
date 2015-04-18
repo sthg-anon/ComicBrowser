@@ -7,30 +7,31 @@ using System.Xml;
 
 namespace ComicBrowser
 {
-    class FileOpenHistory : IDisposable
+    class SavedItemHistory : IDisposable
     {
         public event EventHandler OnFileSelect;
 
-        private const string FILE_NAME = "history.xml";
         private const int HISTORY_LENGTH = 10;
 
         private readonly LinkedList<string> history = new LinkedList<string>();
+        private readonly string fileName;
 
         private int width = 20;
-        private Graphics graphics;
-        private Font font;
+        private readonly Graphics graphics;
+        private readonly Font font;
 
-        public FileOpenHistory(Graphics graphics, Font font)
+        public SavedItemHistory(string fileName, Graphics graphics, Font font)
         {
+            this.fileName = fileName;
             this.graphics = graphics;
             this.font = font;
 
-            if(!File.Exists(FILE_NAME))
+            if(!File.Exists(fileName))
             {
                 return;
             }
 
-            using (FileStream fs = new FileStream(FILE_NAME, FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
             {
                 XmlDocument xml = new XmlDocument();
                 xml.Load(fs);
@@ -46,9 +47,9 @@ namespace ComicBrowser
                     foreach (var child in tagNode.ChildNodes)
                     {
                         XmlElement element = (XmlElement)child;
-                        string fileName = element.InnerXml;
-                        history.AddLast(fileName);
-                        adjustWidth(fileName);
+                        string itemName = element.InnerXml;
+                        history.AddLast(itemName);
+                        adjustWidth(itemName);
                     }
                 }
             }
@@ -89,7 +90,7 @@ namespace ComicBrowser
                 history.RemoveLast();
             }
             
-            using (FileStream fs = new FileStream(FILE_NAME, FileMode.Create, FileAccess.Write))
+            using (FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
                 XmlTextWriter writer = new XmlTextWriter(fs, System.Text.Encoding.UTF8);
                 writer.Formatting = Formatting.Indented;

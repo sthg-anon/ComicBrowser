@@ -50,7 +50,7 @@
     <Compile Include="CBXml.cs" />
     <Compile Include="Comic.cs" />
     <Compile Include="ComicFileType.cs" />
-    <Compile Include="FileOpenHistory.cs" />
+    <Compile Include="SavedItemHistory.cs" />
     <Compile Include="FileUtils.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

@@ -9,7 +9,7 @@ namespace ComicBrowser
 {
     public partial class MainForm : Form
     {
-        private FileOpenHistory history;
+        private SavedItemHistory history;
         private CBXml root = null;
 
         public MainForm()
@@ -20,7 +20,7 @@ namespace ComicBrowser
         private void MainForm_Load(object sender, EventArgs e)
         {
             Console.WriteLine("current directory: {0}", Directory.GetCurrentDirectory());
-            this.history = new FileOpenHistory(this.CreateGraphics(), this.Font);
+            this.history = new SavedItemHistory("history.xml", this.CreateGraphics(), this.Font);
 
             history.OnFileSelect += this.onFileHistorySelect;
 
