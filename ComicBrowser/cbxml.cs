@@ -86,7 +86,7 @@ namespace ComicBrowser
                     }
                 }
 
-                dic.Add(fileName, new Comic(fileName, issue, tags));
+                dic.Add(fileName, new Comic(fileName, directory, issue, tags));
             }
             return dic;
         }
@@ -103,7 +103,7 @@ namespace ComicBrowser
                 {
                     continue;
                 }
-                comicMap.Add(fileName, new Comic(fileName));
+                comicMap.Add(fileName, new Comic(fileName, directory));
             }
         }
 

@@ -9,13 +9,21 @@ namespace ComicBrowser
         public string File { get; set; }
         public int Issue { get; set; }
 
-        public Comic(string file) : this(file, -1, new HashSet<string>()) { }
+        private readonly string dir;
 
-        public Comic(string file, int issue, HashSet<string> tags)
+        public Comic(string file, string dir) : this(file, dir, -1, new HashSet<string>()) { }
+
+        public Comic(string file, string dir, int issue, HashSet<string> tags)
         {
             this.File = file;
             this.Issue = issue;
             this.Tags = tags;
+            this.dir = dir;
+        }
+
+        public string AbsolutePath()
+        {
+            return System.IO.Path.Combine(dir, File);
         }
     }
 }

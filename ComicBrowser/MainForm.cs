@@ -146,7 +146,7 @@ namespace ComicBrowser
                 Console.WriteLine("--comics loaded--");
                 for (int ii = 0; ii < cbxml.Comics.Count; ii++)
                 {
-                    Console.WriteLine("Comic: {0}", cbxml.Comics[ii].File);
+                    Console.WriteLine("Comic: {0} ({1})", cbxml.Comics[ii].AbsolutePath(), cbxml.Comics[ii].File);
                 }
             }
         }
