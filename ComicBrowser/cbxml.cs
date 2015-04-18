@@ -295,25 +295,6 @@ namespace ComicBrowser
             return comicList;
         }
 
-        private void swap(List<Comic> list, int itemA, int itemB)
-        {
-            if (itemA < 0) itemA = 0;
-            if (itemB < 0) itemB = 0;
-
-            int greaterIndex = itemA;
-            int lesserIndex = itemB;
-
-            if(itemA >= list.Count || itemB >= list.Count)
-            {
-                greaterIndex = list.Count - 1;
-                lesserIndex = Math.Min(itemA, itemB);
-            }
-
-            Comic temp = list[greaterIndex];
-            list[greaterIndex] = list[lesserIndex];
-            list[lesserIndex] = temp;
-        }
-
         public static bool FileExtensionMatches(string file)
         {
             string extention = Path.GetExtension(file);
