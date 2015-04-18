@@ -17,7 +17,6 @@ namespace ComicBrowser
         private readonly string directory;
          //file name relative to directory, comic
         private Dictionary<string, Comic> comics;
-
                                   //folder, child xml
         public Dictionary<string, CBXml> ChildXMLs { get; private set; }
         public bool Valid { get; private set; }
@@ -170,8 +169,6 @@ namespace ComicBrowser
                 }
             }
 
-
-
             // printComics();
             loadNewFiles();
 
@@ -229,6 +226,32 @@ namespace ComicBrowser
                     Console.WriteLine("    tag: {0}", tag);
                 }
             }
+        }
+
+        public TreeNode GetNode()
+        {
+            TreeNode node = null;
+            string dirName = new DirectoryInfo(directory).Name;
+            if (ChildXMLs.Count == 0)
+            {
+                node = new TreeNode(dirName);
+            }
+            else
+            {
+                TreeNode[] nodes = new TreeNode[ChildXMLs.Count];
+                int index = 0;
+                foreach (CBXml child in ChildXMLs.Values)
+                {
+                    nodes[index] = child.GetNode();
+                    index++;
+                }
+
+                node = new TreeNode(isRoot ? ROOT_NODE_NAME : dirName, nodes);
+            }
+
+            node.AddPairing(this);
+
+            return node;
         }
 
         public static bool FileExtensionMatches(string file)
@@ -294,30 +317,5 @@ namespace ComicBrowser
             return String.Format("Comic File Library (*{0})|*{1};", CBXML_EXTENSION, CBXML_EXTENSION);
         }
 
-        public TreeNode GetNode()
-        {
-            TreeNode node = null;
-            string dirName = new DirectoryInfo(directory).Name;
-            if(ChildXMLs.Count == 0)
-            {
-                node = new TreeNode(dirName);
-            }
-            else
-            {
-                TreeNode[] nodes = new TreeNode[ChildXMLs.Count];
-                int index = 0;
-                foreach (CBXml child in ChildXMLs.Values)
-                {
-                    nodes[index] = child.GetNode();
-                    index++;
-                }
-
-                node = new TreeNode(isRoot ? ROOT_NODE_NAME : dirName, nodes);
-            }
-
-            node.AddPairing(this);
-
-            return node;
-        }
     }
 }
