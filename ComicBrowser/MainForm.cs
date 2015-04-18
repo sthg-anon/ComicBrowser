@@ -61,6 +61,9 @@ namespace ComicBrowser
         {
             root.Save();
 
+            //enable tree view
+            treeView.Enabled = true;
+
             //populate the tree view
             populateTreeView();
         }
