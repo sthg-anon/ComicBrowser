@@ -37,16 +37,11 @@ namespace ComicBrowser
                 {
                     Open(potentialCBXML, false);
                     this.Valid = true;
-                }
-                else
-                {
-                    this.Valid = false;
+                    return;
                 }
             }
-            else
-            {
-                this.Valid = false;
-            }
+
+            this.Valid = false;
         }
 
         private Dictionary<string, Comic> read(XmlDocument xml)
