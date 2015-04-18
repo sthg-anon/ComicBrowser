@@ -28,19 +28,30 @@ namespace ComicBrowser
             openFileDialog.Filter = CBXml.getFileFilter();
 
             //open current cbxml.
-            open(getArgFile());
+            openCBXML(getArgFile(), false);
 
             //update the dropdown menu
             updateHistoryDropdown();
-
-            //populate the tree view
-            populateTreeView();
         }
 
-        private void open(string file)
+        private void openCBXML(string file, bool create)
         {
-            root = new CBXml(file);
-            root.Save();
+            root = new CBXml();
+
+            if(file.Equals(String.Empty))
+            {
+                return;
+            }
+
+            root.Open(file, create);
+
+            if(root.Valid)
+            {
+                root.Save();
+
+                //populate the tree view
+                populateTreeView();
+            }
         }
 
         private void onFileHistorySelect(object sender, EventArgs e)
@@ -56,7 +67,7 @@ namespace ComicBrowser
             }
             else
             {
-                open(file);
+                //open(file);
             }
         }
 
@@ -97,7 +108,7 @@ namespace ComicBrowser
 
             if (!CBXml.FileExtensionMatches(file))
             {
-                MessageBox.Show(String.Format("{0} is not a {1} file!", file, CBXml.GetFileExtension()),
+                MessageBox.Show(String.Format("{0} is not a {1} file!", file, CBXml.CBXML_EXTENSION),
                     "File Input Error",
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error,
@@ -109,12 +120,22 @@ namespace ComicBrowser
             return file;
         }
 
+        private string promptOpenCBXMLFile()
+        {
+            string file = String.Empty;
+            DialogResult result = openFileDialog.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                file = openFileDialog.FileName;
+            }
+            return file;
+        }
+
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DialogResult result = openFileDialog.ShowDialog();
-            if(result == DialogResult.OK)
+            string file = promptOpenCBXMLFile();
+            if(!file.Equals(String.Empty))
             {
-                string file = openFileDialog.FileName;
                 history.OpenFile(file);
                 updateHistoryDropdown();
             }
@@ -143,6 +164,16 @@ namespace ComicBrowser
         private void treeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
         {
             e.Cancel = true;
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            saveFileDialog.FileName = CBXml.DEFAULT_CBXML;
+            DialogResult result = saveFileDialog.ShowDialog();
+            if(result == DialogResult.OK)
+            {
+                openCBXML(saveFileDialog.FileName, true);
+            }
         }
     }
 }

@@ -8,46 +8,28 @@ namespace ComicBrowser
 {
     class CBXml
     {
-        private const string CBXML_EXTENSION = ".xml";
-        private const string DEFAULT_CBXML = "comics" + CBXML_EXTENSION;
-        private const string ROOT_NODE_NAME = "root";
+        internal const string CBXML_EXTENSION = ".cbxml";
+        internal const string DEFAULT_CBXML = "comics" + CBXML_EXTENSION;
+        internal const string ROOT_NODE_NAME = "root";
 
         private readonly bool isRoot;
-        private readonly string file;
+        private string file;
         private readonly string directory;
          //file name relative to directory, comic
-        private readonly Dictionary<string, Comic> comics;
+        private Dictionary<string, Comic> comics;
 
                                   //folder, child xml
         public Dictionary<string, CBXml> ChildXMLs { get; private set; }
+        public bool Valid { get; private set; }
 
-        public CBXml(string inputFile) : this(inputFile, Directory.GetCurrentDirectory(), true) { }
+        public CBXml() : this(Directory.GetCurrentDirectory(), true) { }
 
-        public CBXml(string inputFile, string directory, bool root)
+        public CBXml(string directory, bool root)
         {
             this.isRoot = root;
-            this.file = inputFile.Equals(String.Empty) ? DEFAULT_CBXML : inputFile;
+            //this.file = inputFile;//inputFile.Equals(String.Empty) ? DEFAULT_CBXML : inputFile;
             this.directory = directory;
-
-            if (!File.Exists(file))
-            {
-                this.comics = new Dictionary<string, Comic>();
-            }
-            else
-            {
-                using(FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
-                {
-                    XmlDocument xml = new XmlDocument();
-                    xml.Load(fs);//TODO: catch exception
-
-                    this.comics = read(xml);
-                }
-            }
-
-           // printComics();
-            loadNewFiles();
-
-            ChildXMLs = loadChildren();
+            this.Valid = false;
         }
 
         private Dictionary<string, Comic> read(XmlDocument xml)
@@ -153,6 +135,44 @@ namespace ComicBrowser
             }
         }
 
+        public void Open(string inputFile, bool create)
+        {
+            //Console.WriteLine("Input file pre: {0}\nEmpty pre: {1}", inputFile, inputFile.Equals(String.Empty));
+            this.file = inputFile.Equals(String.Empty) ? findCBXML(directory) : inputFile;
+            //Console.WriteLine("!create: {0}\nInput file: {1}\nEmpty:{2}", !create, inputFile, file.Equals(String.Empty));
+            if (!create && (file.Equals(String.Empty) || !File.Exists(file)))
+            {
+                //this.comics = new Dictionary<string, Comic>();
+                //throw new FileNotFoundException("File not found!", file);
+                //Console.WriteLine("invalid!");
+                this.Valid = false;
+                return;
+            }
+            else if (create && !File.Exists(file))
+            {
+                this.comics = new Dictionary<string, Comic>();
+            }
+            else
+            {
+                using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
+                {
+                    XmlDocument xml = new XmlDocument();
+                    xml.Load(fs);//TODO: catch exception
+
+                    this.comics = read(xml);
+                }
+            }
+
+
+
+            // printComics();
+            loadNewFiles();
+
+            ChildXMLs = loadChildren();
+            //Console.WriteLine("now valid!");
+            this.Valid = true;
+        }
+
         public void PrintTree(int level)
         {
             for (int ii = 0; ii < level; ii++)
@@ -171,14 +191,21 @@ namespace ComicBrowser
             Dictionary<string, CBXml> children = new Dictionary<string, CBXml>();
             string[] directories = Directory.GetDirectories(directory);
 
-            foreach(string dir in directories)
+            foreach (string dir in directories)
             {
                 string childPath = Path.Combine(directory, dir);
-                string cbxml = getChildCbxml(childPath);
-                if(!cbxml.Equals(String.Empty))
+                Console.WriteLine("Made child path: {0}", childPath);
+                string cbxml = getChildCbxmlFileName(childPath);
+                if (!cbxml.Equals(String.Empty))
                 {
                     string dirName = new DirectoryInfo(dir).Name;
-                    children.Add(dirName, new CBXml(cbxml, dir, false));
+                    Console.WriteLine("Dirname: {0}", dirName);
+                    CBXml child = new CBXml(dir, false);
+                    child.Open(cbxml, true);
+                    if (child.Valid)
+                    {
+                        children.Add(dirName, child);
+                    }
                 }
             }
 
@@ -206,17 +233,7 @@ namespace ComicBrowser
             return extention.ToLower().Equals(CBXML_EXTENSION);
         }
 
-        public static string GetFileExtension()
-        {
-            return CBXML_EXTENSION;
-        }
-
-        public static string GetDefaultCBXML()
-        {
-            return DEFAULT_CBXML;
-        }
-
-        private static string getChildCbxml(string childPath)
+        private static string getChildCbxmlFileName(string childPath)
         {
             string cbxml = findCBXML(childPath);
             if (!cbxml.Equals(String.Empty))
@@ -246,6 +263,7 @@ namespace ComicBrowser
         /// <returns>The path to the .cbxml file, if there is one.</returns>
         private static string findCBXML(string currentFolder)
         {
+            Console.WriteLine("Current folder: {0}", currentFolder);
             //string currentFolder = Directory.GetCurrentDirectory();
             string[] files = Directory.GetFiles(currentFolder);
 
@@ -266,6 +284,7 @@ namespace ComicBrowser
                 cbXML = files[ii];
             }
 
+            //Console.WriteLine("Located cbxml: {0}\nEmpty: {1}", cbXML, cbXML.Equals(String.Empty));
             return cbXML;
         }
 
