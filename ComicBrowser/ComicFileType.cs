@@ -34,7 +34,7 @@ namespace ComicBrowser
 
             foreach(ComicFileType type in Enum.GetValues(typeof(ComicFileType)))
             {
-                if (extension.Equals(type.StringValue()))
+                if (extension.ToLower().Equals(type.StringValue()))
                 {
                     return true;
                 }
