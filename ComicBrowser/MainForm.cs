@@ -20,24 +20,27 @@ namespace ComicBrowser
         private void MainForm_Load(object sender, EventArgs e)
         {
             Console.WriteLine("current directory: {0}", Directory.GetCurrentDirectory());
+            //set up file history
             this.history = new SavedItemHistory("history.xml", this.CreateGraphics(), this.Font);
 
+            //open file listener
             history.OnFileSelect += this.onFileHistorySelect;
-
             openFileDialog.Filter = CBXml.getFileFilter();
 
+            //open current cbxml.
             open(getArgFile());
+
+            //update the dropdown menu
+            updateHistoryDropdown();
+
+            //populate the tree view
+            populateTreeView();
         }
 
         private void open(string file)
         {
             root = new CBXml(file);
             root.Save();
-            //root.PrintTree(0);
-
-            updateHistoryDropdown();
-
-            populateTreeView();
         }
 
         private void onFileHistorySelect(object sender, EventArgs e)
@@ -60,7 +63,16 @@ namespace ComicBrowser
         private void updateHistoryDropdown()
         {
             recentLibrariesToolStripMenuItem.DropDownItems.Clear();
-            recentLibrariesToolStripMenuItem.DropDownItems.AddRange(history.getEntries());
+            ToolStripButton[] buttons = history.getEntries();
+            if(buttons.Length > 0)
+            {
+                recentLibrariesToolStripMenuItem.DropDownItems.AddRange(buttons);
+                recentLibrariesToolStripMenuItem.Enabled = true;
+            }
+            else
+            {
+                recentLibrariesToolStripMenuItem.Enabled = false;
+            }
         }
 
         private static string getArgFile()
