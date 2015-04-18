@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace ComicBrowser
 {
-    static class NodeHelper
+    static class TreeNodeExtensions
     {
         private static Dictionary<TreeNode, CBXml> filePairings = new Dictionary<TreeNode, CBXml>();
 

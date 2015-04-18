@@ -124,6 +124,7 @@ namespace ComicBrowser
         private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             history.Dispose();
+            root.Save();
         }
 
         private void populateTreeView()
@@ -163,6 +164,11 @@ namespace ComicBrowser
             {
                 openCBXML(saveFileDialog.FileName, true);
             }
+        }
+
+        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
 
         private static string getArgFile()
