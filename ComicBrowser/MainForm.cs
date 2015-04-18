@@ -100,40 +100,6 @@ namespace ComicBrowser
             }
         }
 
-        private static string getArgFile()
-        {
-            string[] args = Environment.GetCommandLineArgs();
-            if (args.Length <= 1)
-            {
-                return String.Empty;
-            }
-
-            string file = args[1];
-            if (FileUtils.IsDirectory(file))
-            {
-                MessageBox.Show(String.Format("{0} is a file path!", file),
-                    "File Input Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error,
-                    MessageBoxDefaultButton.Button1);
-
-                Application.Exit();
-            }
-
-            if (!CBXml.FileExtensionMatches(file))
-            {
-                MessageBox.Show(String.Format("{0} is not a {1} file!", file, CBXml.CBXML_EXTENSION),
-                    "File Input Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error,
-                    MessageBoxDefaultButton.Button1);
-
-                Application.Exit();
-            }
-
-            return file;
-        }
-
         private string promptOpenCBXMLFile()
         {
             string file = String.Empty;
@@ -155,7 +121,7 @@ namespace ComicBrowser
             }
         }
 
-        void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             history.Dispose();
         }
@@ -197,6 +163,40 @@ namespace ComicBrowser
             {
                 openCBXML(saveFileDialog.FileName, true);
             }
+        }
+
+        private static string getArgFile()
+        {
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length <= 1)
+            {
+                return String.Empty;
+            }
+
+            string file = args[1];
+            if (FileUtils.IsDirectory(file))
+            {
+                MessageBox.Show(String.Format("{0} is a file path!", file),
+                    "File Input Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1);
+
+                Application.Exit();
+            }
+
+            if (!CBXml.FileExtensionMatches(file))
+            {
+                MessageBox.Show(String.Format("{0} is not a {1} file!", file, CBXml.CBXML_EXTENSION),
+                    "File Input Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1);
+
+                Application.Exit();
+            }
+
+            return file;
         }
     }
 }
