@@ -27,7 +27,6 @@ namespace ComicBrowser
         public CBXml(string directory, bool root)
         {
             this.isRoot = root;
-            //this.file = inputFile;//inputFile.Equals(String.Empty) ? DEFAULT_CBXML : inputFile;
             this.directory = directory;
             this.Valid = false;
         }
@@ -137,14 +136,9 @@ namespace ComicBrowser
 
         public void Open(string inputFile, bool create)
         {
-            //Console.WriteLine("Input file pre: {0}\nEmpty pre: {1}", inputFile, inputFile.Equals(String.Empty));
             this.file = inputFile.Equals(String.Empty) ? findCBXML(directory) : inputFile;
-            //Console.WriteLine("!create: {0}\nInput file: {1}\nEmpty:{2}", !create, inputFile, file.Equals(String.Empty));
             if (!create && (file.Equals(String.Empty) || !File.Exists(file)))
             {
-                //this.comics = new Dictionary<string, Comic>();
-                //throw new FileNotFoundException("File not found!", file);
-                //Console.WriteLine("invalid!");
                 this.Valid = false;
                 return;
             }
@@ -169,7 +163,6 @@ namespace ComicBrowser
             loadNewFiles();
 
             ChildXMLs = loadChildren();
-            //Console.WriteLine("now valid!");
             this.Valid = true;
         }
 
@@ -194,12 +187,10 @@ namespace ComicBrowser
             foreach (string dir in directories)
             {
                 string childPath = Path.Combine(directory, dir);
-                Console.WriteLine("Made child path: {0}", childPath);
                 string cbxml = getChildCbxmlFileName(childPath);
                 if (!cbxml.Equals(String.Empty))
                 {
                     string dirName = new DirectoryInfo(dir).Name;
-                    Console.WriteLine("Dirname: {0}", dirName);
                     CBXml child = new CBXml(dir, false);
                     child.Open(cbxml, true);
                     if (child.Valid)
@@ -263,8 +254,6 @@ namespace ComicBrowser
         /// <returns>The path to the .cbxml file, if there is one.</returns>
         private static string findCBXML(string currentFolder)
         {
-            Console.WriteLine("Current folder: {0}", currentFolder);
-            //string currentFolder = Directory.GetCurrentDirectory();
             string[] files = Directory.GetFiles(currentFolder);
 
             string cbXML = String.Empty;
@@ -284,7 +273,6 @@ namespace ComicBrowser
                 cbXML = files[ii];
             }
 
-            //Console.WriteLine("Located cbxml: {0}\nEmpty: {1}", cbXML, cbXML.Equals(String.Empty));
             return cbXML;
         }
 
