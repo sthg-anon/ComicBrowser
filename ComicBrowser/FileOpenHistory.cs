@@ -16,7 +16,7 @@ namespace ComicBrowser
 
         private readonly LinkedList<string> history = new LinkedList<string>();
 
-        private int width = 100;
+        private int width = 20;
         private Graphics graphics;
         private Font font;
 
@@ -70,7 +70,7 @@ namespace ComicBrowser
 
         public void OpenFile(string file)
         {
-            if (history.Last.Equals(file))
+            if (history.Count > 0 && history.Last.Equals(file))
             {
                 return;
             }
