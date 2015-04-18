@@ -29,7 +29,6 @@ namespace ComicBrowser
         {
             this.isRoot = root;
             this.directory = directory;
-            this.Valid = false;
 
             if (root)
             {
