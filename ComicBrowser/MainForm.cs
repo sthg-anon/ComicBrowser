@@ -169,7 +169,16 @@ namespace ComicBrowser
         {
             TreeNode node = treeView.SelectedNode;
             CBXml cbxml = node.GetCBXml();
-            cbxml.PrintTree(0);
+            //cbxml.PrintTree(0);
+
+            if (cbxml.Valid)
+            {
+                Console.WriteLine("--comics loaded--");
+                for (int ii = 0; ii < cbxml.Comics.Count; ii++)
+                {
+                    Console.WriteLine("Comic: {0}", cbxml.Comics[ii].File);
+                }
+            }
         }
 
         private void treeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -16,10 +17,11 @@ namespace ComicBrowser
         private string file;
         private readonly string directory;
          //file name relative to directory, comic
-        private Dictionary<string, Comic> comics;
+        private Dictionary<string, Comic> comicMap;
                                   //folder, child xml
         public Dictionary<string, CBXml> ChildXMLs { get; private set; }
         public bool Valid { get; private set; }
+        public List<Comic> Comics { get; private set; }
 
         public CBXml() : this(Directory.GetCurrentDirectory(), true) { }
 
@@ -98,11 +100,11 @@ namespace ComicBrowser
             {
                 string fileName = Path.GetFileName(f);
 
-                if (!ComicFileTypeExtensions.Matches(fileName) || comics.ContainsKey(fileName))
+                if (!ComicFileTypeExtensions.Matches(fileName) || comicMap.ContainsKey(fileName))
                 {
                     continue;
                 }
-                comics.Add(fileName, new Comic(fileName));
+                comicMap.Add(fileName, new Comic(fileName));
             }
         }
 
@@ -114,7 +116,7 @@ namespace ComicBrowser
                 writer.Formatting = Formatting.Indented;
                 writer.WriteStartDocument();
                 writer.WriteStartElement("comics");
-                foreach (Comic comic in comics.Values)
+                foreach (Comic comic in comicMap.Values)
                 {
                     writer.WriteStartElement("comic");
                     writer.WriteElementString("file", comic.File);
@@ -156,7 +158,7 @@ namespace ComicBrowser
             }
             else if (create && !File.Exists(file))
             {
-                this.comics = new Dictionary<string, Comic>();
+                this.comicMap = new Dictionary<string, Comic>();
             }
             else
             {
@@ -165,7 +167,7 @@ namespace ComicBrowser
                     XmlDocument xml = new XmlDocument();
                     xml.Load(fs);//TODO: catch exception
 
-                    this.comics = read(xml);
+                    this.comicMap = read(xml);
                 }
             }
 
@@ -173,6 +175,8 @@ namespace ComicBrowser
             loadNewFiles();
 
             ChildXMLs = loadChildren();
+            //ChildXMLs = new Dictionary<string, CBXml>();
+            this.Comics = makeComicList();
             this.Valid = true;
         }
 
@@ -215,7 +219,7 @@ namespace ComicBrowser
 
         private void printComics()
         {
-            foreach (KeyValuePair<string, Comic> entry in comics)
+            foreach (KeyValuePair<string, Comic> entry in comicMap)
             {
                 Console.WriteLine("Comic: {0}", entry.Key);
                 Comic comic = entry.Value;
@@ -252,6 +256,62 @@ namespace ComicBrowser
             node.AddPairing(this);
 
             return node;
+        }
+
+        private List<Comic> makeComicList()
+        {
+            List<Comic> comicList = new List<Comic>();
+
+            //make a list with the initial unsorted values
+            List<Comic> initialList = new List<Comic>(comicMap.Values);
+
+            //make a list of indexless comics
+            List<Comic> indexless_comics = new List<Comic>();
+
+            //make a list of indexed comics
+            List<Comic> indexed_comics = new List<Comic>();
+
+            //populate comics lists
+            for (int ii = 0; ii < initialList.Count; ii++)
+            {
+                if (initialList[ii].Issue < 0)
+                {
+                    indexless_comics.Add(initialList[ii]);
+                }
+                else
+                {
+                    indexed_comics.Add(initialList[ii]);
+                }
+            }
+
+            //sort indexed comics by number
+            indexed_comics = indexed_comics.OrderBy(c => c.Issue).ToList();
+            //sort indexless comics by name
+            indexless_comics = indexless_comics.OrderBy(c => c.File).ToList();
+            //append lists
+            comicList.AddRange(indexed_comics);
+            comicList.AddRange(indexless_comics);
+
+            return comicList;
+        }
+
+        private void swap(List<Comic> list, int itemA, int itemB)
+        {
+            if (itemA < 0) itemA = 0;
+            if (itemB < 0) itemB = 0;
+
+            int greaterIndex = itemA;
+            int lesserIndex = itemB;
+
+            if(itemA >= list.Count || itemB >= list.Count)
+            {
+                greaterIndex = list.Count - 1;
+                lesserIndex = Math.Min(itemA, itemB);
+            }
+
+            Comic temp = list[greaterIndex];
+            list[greaterIndex] = list[lesserIndex];
+            list[lesserIndex] = temp;
         }
 
         public static bool FileExtensionMatches(string file)
