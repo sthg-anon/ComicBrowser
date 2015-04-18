@@ -47,11 +47,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CBX\CBFile.cs" />
     <Compile Include="CBXml.cs" />
-    <Compile Include="CBX\CBXReader.cs" />
+    <Compile Include="CBXReader.cs" />
     <Compile Include="Comic.cs" />
     <Compile Include="ComicFileType.cs" />
+    <Compile Include="ImageFileType.cs" />
     <Compile Include="SavedItemHistory.cs" />
     <Compile Include="FileUtils.cs" />
     <Compile Include="MainForm.cs">

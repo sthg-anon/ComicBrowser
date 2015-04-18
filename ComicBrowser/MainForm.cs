@@ -144,10 +144,25 @@ namespace ComicBrowser
             if (cbxml.Valid)
             {
                 Console.WriteLine("--comics loaded--");
-                for (int ii = 0; ii < cbxml.Comics.Count; ii++)
-                {
-                    Console.WriteLine("Comic: {0} ({1})", cbxml.Comics[ii].AbsolutePath(), cbxml.Comics[ii].File);
-                }
+                CBXReader reader = new CBXReader(cbxml);
+                Comic c = cbxml.Comics[0];
+                //for (int ii = 0; ii < cbxml.Comics.Count; ii++)
+                //{
+                //    Console.WriteLine("Comic: {0} ({1})", cbxml.Comics[ii].AbsolutePath(), cbxml.Comics[ii].File);
+                //    reader.GetCover(cbxml.Comics[ii]);
+                //}
+                c.GenerateThumbnail();
+                Image i = c.Thumbnail;
+                //Image i = Image.FromFile(@"D:\desktop\tails_sonic.jpg");
+               // PictureBox box = new PictureBox();
+                pictureBox1.Image = i;
+                pictureBox1.Height = i.Height;
+                pictureBox1.Width = i.Width;
+                //box.Show();
+                //using(Graphics g = this.CreateGraphics())
+                //{
+                //    g.DrawImage(c.Thumbnail, new Point(100, 100));
+                //}
             }
         }
 
