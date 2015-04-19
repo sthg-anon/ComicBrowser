@@ -12,12 +12,19 @@ namespace ComicBrowser
         public event comicClickDelegate ComicClicked;
 
         #region Constants
+        private const int INITIAL_SPACER = 40;
+        private const int INITIAL_THUMBNAIL_WIDTH = 200;
+        private const int INITIAL_THUMBNAIL_HEIGHT = 300;
+
         private const int TRACKBAR_WIDTH = 230;
         private const int TRACKBAR_START = 5;
 
-        private const int SPACER_RESIZE_STEP = (40 / TRACKBAR_START);
-        private const int THUMBNAIL_WIDTH_RESIZE_STEP = (200 / TRACKBAR_START);
-        private const int THUMBNAIL_HEIGHT_RESIZE_STEP = (300 / TRACKBAR_START);
+        private const int RESIZE_TRACKBAR_MAX = 10;
+        private const int RESIZE_TRACKBAR_MIN = 1;
+
+        private const int SPACER_RESIZE_STEP = (INITIAL_SPACER / TRACKBAR_START);
+        private const int THUMBNAIL_WIDTH_RESIZE_STEP = (INITIAL_THUMBNAIL_WIDTH / TRACKBAR_START);
+        private const int THUMBNAIL_HEIGHT_RESIZE_STEP = (INITIAL_THUMBNAIL_HEIGHT / TRACKBAR_START);
 
         private const int SMALL_CHANGE = 50;
         private const int LARGE_CHANGE = 300;
@@ -44,8 +51,8 @@ namespace ComicBrowser
         private int rows = 0;
         private int columns = 0;
 
-        private int spacerWidth = 40;
-        private int spacerHeight = 40;
+        private int spacerWidth = INITIAL_SPACER;
+        private int spacerHeight = INITIAL_SPACER;
 
         private static int thumbnailWidth = 200;
         private static int thumbnailHeight = 300;
@@ -84,7 +91,6 @@ namespace ComicBrowser
             spacerTrackbar.Name = "spacerTrackbar";
             spacerTrackbar.TabIndex = 2;
             spacerTrackbar.MouseUp += onSpacerTrackbarMove;
-            spacerTrackbar.Scroll += onSpacerTrackbarMove;
             spacerTrackbar.Value = TRACKBAR_START;
             controlPanel.Controls.Add(spacerTrackbar);
 
@@ -95,9 +101,10 @@ namespace ComicBrowser
             sizeTrackbar.Name = "sizeTrackbar";
             sizeTrackbar.TabIndex = 3;
             sizeTrackbar.MouseUp += onSizeTrackbarMove;
-            sizeTrackbar.Scroll += onSizeTrackbarMove;
             sizeTrackbar.Value = TRACKBAR_START;
             controlPanel.Controls.Add(sizeTrackbar);
+            sizeTrackbar.Minimum = RESIZE_TRACKBAR_MIN;
+            sizeTrackbar.Maximum = RESIZE_TRACKBAR_MAX;
 
             //--tooltip--
             ToolTip trackbarToolTip = new ToolTip();
@@ -136,6 +143,8 @@ namespace ComicBrowser
                 tgpw.Text = "Generating thumbnails...";
                 tgpw.Show();
                 tgpw.Start();
+                sizeTrackbar.Enabled = false;
+                spacerTrackbar.Enabled = false;
             }
             else
             {
@@ -148,6 +157,8 @@ namespace ComicBrowser
             //columns vertical, rows horizontal
             scrollbar.Value = scrollbar.Minimum;
             cbxml.ThumbnailsGenerated = true;
+            sizeTrackbar.Enabled = true;
+            spacerTrackbar.Enabled = true;
 
             this.width = panel.Width - SCROLLBAR_WIDTH;
             this.height = panel.Height;
@@ -260,6 +271,8 @@ namespace ComicBrowser
             tgpw.Finished += OnPanelResized;
             tgpw.Show();
             tgpw.Start();
+            sizeTrackbar.Enabled = false;
+            spacerTrackbar.Enabled = false;
         }
 
         public static int ThumbnailWidth()
@@ -270,6 +283,16 @@ namespace ComicBrowser
         public static int ThumbnailHeight()
         {
             return thumbnailHeight;
+        }
+
+        public static int maxThumbnailWidth()
+        {
+            return RESIZE_TRACKBAR_MAX * THUMBNAIL_WIDTH_RESIZE_STEP;
+        }
+
+        public static int maxThumbnailHeight()
+        {
+            return RESIZE_TRACKBAR_MAX * THUMBNAIL_HEIGHT_RESIZE_STEP;
         }
     }
 }

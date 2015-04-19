@@ -87,6 +87,7 @@ namespace ComicBrowser
                         thumbnailEntry.WriteTo(stream);
                         originalCoverImage = Image.FromStream(stream);
                     }
+                    originalCoverImage = scaleImage(originalCoverImage, ComicView.maxThumbnailWidth(), ComicView.maxThumbnailHeight());
                 }
             }
             Image thumbnail = scaleImage(originalCoverImage, ComicView.ThumbnailWidth(), ComicView.ThumbnailHeight());
