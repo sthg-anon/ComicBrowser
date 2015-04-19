@@ -14,7 +14,7 @@ namespace ComicBrowser
         internal const int THUMBNAIL_WIDTH = 200;
         internal const int THUMBNAIL_HEIGHT = 300;
 
-        private const int SPACER_RESIZE_STEP = 20;
+        private const int SPACER_RESIZE_STEP = 8;
 
         private const int SMALL_CHANGE = 50;
         private const int LARGE_CHANGE = 300;
@@ -29,8 +29,10 @@ namespace ComicBrowser
         private const bool TOOLTIP_SHOW_ALWAYS = true;
 
         private const int TRACKBAR_WIDTH = 230;
+        private const int TRACBAR_START = 6;
 
         private readonly ScrollBar scrollbar = new VScrollBar();
+        private readonly TrackBar trackbar = new TrackBar();
         private readonly Panel panel;
 
         private int width = 0;
@@ -64,12 +66,13 @@ namespace ComicBrowser
             panel.MouseEnter += (sender, e) => scrollbar.Focus();
 
             //--control panel--
-            TrackBar trackbar = new TrackBar();
             trackbar.Anchor = ((AnchorStyles)((AnchorStyles.Bottom | AnchorStyles.Right)));
             trackbar.Size = new Size(TRACKBAR_WIDTH, controlPanel.Height);
             trackbar.Location = new Point(controlPanel.Width - trackbar.Size.Width, 0);
             trackbar.Name = "trackbar";
             trackbar.TabIndex = 2;
+            trackbar.MouseUp += onTrackbarMouseUp;
+            trackbar.Value = 5;
             controlPanel.Controls.Add(trackbar);
 
             //--tooltip--
@@ -191,6 +194,13 @@ namespace ComicBrowser
                 }
                 y += THUMBNAIL_HEIGHT + spacerHeight;
             }
+        }
+
+        private void onTrackbarMouseUp(object sender, MouseEventArgs e)
+        {
+            spacerHeight = trackbar.Value * SPACER_RESIZE_STEP;
+            spacerWidth = trackbar.Value * SPACER_RESIZE_STEP;
+            OnPanelResized();
         }
     }
 }
