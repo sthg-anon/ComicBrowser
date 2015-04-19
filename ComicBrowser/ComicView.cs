@@ -28,6 +28,8 @@ namespace ComicBrowser
         private const int TOOLTIP_RESHOW_DELAY = 500;
         private const bool TOOLTIP_SHOW_ALWAYS = true;
 
+        private const int TRACKBAR_WIDTH = 230;
+
         private readonly ScrollBar scrollbar = new VScrollBar();
         private readonly Panel panel;
 
@@ -64,9 +66,9 @@ namespace ComicBrowser
             //--control panel--
             TrackBar trackbar = new TrackBar();
             trackbar.Anchor = ((AnchorStyles)((AnchorStyles.Bottom | AnchorStyles.Right)));
-            trackbar.Location = new Point(609, 3);
+            trackbar.Size = new Size(TRACKBAR_WIDTH, controlPanel.Height);
+            trackbar.Location = new Point(controlPanel.Width - trackbar.Size.Width, 0);
             trackbar.Name = "trackbar";
-            trackbar.Size = new Size(230, 45);
             trackbar.TabIndex = 2;
             controlPanel.Controls.Add(trackbar);
 
