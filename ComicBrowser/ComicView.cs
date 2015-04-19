@@ -111,6 +111,7 @@ namespace ComicBrowser
                     pictureBox.Height = THUMBNAIL_HEIGHT;
                     pictureBox.Image = thumbnail;
                     pictureBox.Location = new Point(x, y);
+                    pictureBox.Cursor = Cursors.Hand;
                     thumbnailBoxes[index] = pictureBox;
 
                     x += THUMBNAIL_WIDTH + WIDTH_SPACER;
