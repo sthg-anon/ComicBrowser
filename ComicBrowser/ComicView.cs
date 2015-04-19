@@ -11,6 +11,7 @@ namespace ComicBrowser
 
         public event comicClickDelegate ComicClicked;
 
+        #region Constants
         internal const int THUMBNAIL_WIDTH = 200;
         internal const int THUMBNAIL_HEIGHT = 300;
 
@@ -31,8 +32,12 @@ namespace ComicBrowser
         private const int TRACKBAR_WIDTH = 230;
         private const int TRACKBAR_START = 5;
 
+        private const int TRACKBARS_SPACER = 15;
+        #endregion
+
         private readonly ScrollBar scrollbar = new VScrollBar();
-        private readonly TrackBar trackbar = new TrackBar();
+        private readonly TrackBar spacerTrackbar = new TrackBar();
+        private readonly TrackBar sizeTrackbar = new TrackBar();
         private readonly Panel panel;
 
         private int width = 0;
@@ -43,7 +48,7 @@ namespace ComicBrowser
         private int spacerWidth = 40;
         private int spacerHeight = 40;
 
-        private int priorTrackbarValue = TRACKBAR_START;
+        private int priorSpacerTrackbarValue = TRACKBAR_START;
 
         private Control[] thumbnailBoxes;
         private CBXml cbxml;
@@ -68,15 +73,25 @@ namespace ComicBrowser
             panel.MouseEnter += (sender, e) => scrollbar.Focus();
 
             //--control panel--
-            trackbar.Anchor = ((AnchorStyles)((AnchorStyles.Bottom | AnchorStyles.Right)));
-            trackbar.Size = new Size(TRACKBAR_WIDTH, controlPanel.Height);
-            trackbar.Location = new Point(controlPanel.Width - trackbar.Size.Width, 0);
-            trackbar.Name = "trackbar";
-            trackbar.TabIndex = 2;
-            trackbar.MouseUp += onTrackbarMove;
-            trackbar.Scroll += onTrackbarMove;
-            trackbar.Value = TRACKBAR_START;
-            controlPanel.Controls.Add(trackbar);
+            //spacerTrackbar
+            spacerTrackbar.Anchor = ((AnchorStyles)((AnchorStyles.Bottom | AnchorStyles.Right)));
+            spacerTrackbar.Size = new Size(TRACKBAR_WIDTH, controlPanel.Height);
+            spacerTrackbar.Location = new Point(controlPanel.Width - spacerTrackbar.Size.Width, 0);
+            spacerTrackbar.Name = "spacerTrackbar";
+            spacerTrackbar.TabIndex = 2;
+            spacerTrackbar.MouseUp += onSpacerTrackbarMove;
+            spacerTrackbar.Scroll += onSpacerTrackbarMove;
+            spacerTrackbar.Value = TRACKBAR_START;
+            controlPanel.Controls.Add(spacerTrackbar);
+
+            //sizeTrackbar
+            sizeTrackbar.Anchor = ((AnchorStyles)((AnchorStyles.Bottom | AnchorStyles.Right)));
+            sizeTrackbar.Size = new Size(TRACKBAR_WIDTH, controlPanel.Height);
+            sizeTrackbar.Location = new Point(controlPanel.Width - spacerTrackbar.Size.Width - TRACKBARS_SPACER - sizeTrackbar.Size.Width);
+            sizeTrackbar.Name = "sizeTrackbar";
+            sizeTrackbar.TabIndex = 3;
+            sizeTrackbar.Value = TRACKBAR_START;
+            controlPanel.Controls.Add(sizeTrackbar);
 
             //--tooltip--
             ToolTip trackbarToolTip = new ToolTip();
@@ -84,7 +99,8 @@ namespace ComicBrowser
             trackbarToolTip.InitialDelay = TOOLTIP_INITIAL_DELAY;
             trackbarToolTip.ReshowDelay = TOOLTIP_RESHOW_DELAY;
             trackbarToolTip.ShowAlways = TOOLTIP_SHOW_ALWAYS;
-            trackbarToolTip.SetToolTip(trackbar, "Change the spacing between the thumbnails");
+            trackbarToolTip.SetToolTip(spacerTrackbar, "Change the spacing between the thumbnails");
+            trackbarToolTip.SetToolTip(sizeTrackbar, "Change the size of the thumbnails");
         }
 
         public void SetView(CBXml cbxml)
@@ -199,16 +215,16 @@ namespace ComicBrowser
             }
         }
 
-        private void onTrackbarMove(object sender, EventArgs e)
+        private void onSpacerTrackbarMove(object sender, EventArgs e)
         {
-            if(trackbar.Value == priorTrackbarValue)
+            if(spacerTrackbar.Value == priorSpacerTrackbarValue)
             {
                 return;
             }
 
-            priorTrackbarValue = trackbar.Value;
-            spacerHeight = trackbar.Value * SPACER_RESIZE_STEP;
-            spacerWidth = trackbar.Value * SPACER_RESIZE_STEP;
+            priorSpacerTrackbarValue = spacerTrackbar.Value;
+            spacerHeight = spacerTrackbar.Value * SPACER_RESIZE_STEP;
+            spacerWidth = spacerTrackbar.Value * SPACER_RESIZE_STEP;
             OnPanelResized();
         }
     }
