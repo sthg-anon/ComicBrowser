@@ -23,7 +23,7 @@ namespace ComicBrowser
 
             //view
             view = new ComicView(viewPanel, viewControlPanel);
-            view.ComicClicked += (c) => Console.WriteLine("{0} clicked!", c.File);
+            view.ComicClicked += (c) => System.Diagnostics.Process.Start(c.AbsolutePath());
             rootSplitContainer.SplitterMoved += (sender, e) => view.AdjustView();
             
             //set up file history
