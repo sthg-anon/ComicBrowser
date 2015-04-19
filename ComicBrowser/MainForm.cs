@@ -21,7 +21,7 @@ namespace ComicBrowser
             Console.WriteLine("current directory: {0}", Directory.GetCurrentDirectory());
 
             //view
-            view = new ComicView(rootSplitContainer.Panel2);
+            view = new ComicView(viewPanel, viewControlPanel);
             view.ComicClicked += (c) => Console.WriteLine("{0} clicked!", c.File);
             //rootSplitContainer.SplitterMoved += (sender, e) => view.OnPanelResized();
             

@@ -40,9 +40,12 @@
             this.rootSplitContainer = new System.Windows.Forms.SplitContainer();
             this.treeView = new System.Windows.Forms.TreeView();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.viewPanel = new System.Windows.Forms.Panel();
+            this.viewControlPanel = new System.Windows.Forms.Panel();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rootSplitContainer)).BeginInit();
             this.rootSplitContainer.Panel1.SuspendLayout();
+            this.rootSplitContainer.Panel2.SuspendLayout();
             this.rootSplitContainer.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -121,6 +124,11 @@
             // rootSplitContainer.Panel1
             // 
             this.rootSplitContainer.Panel1.Controls.Add(this.treeView);
+            // 
+            // rootSplitContainer.Panel2
+            // 
+            this.rootSplitContainer.Panel2.Controls.Add(this.viewControlPanel);
+            this.rootSplitContainer.Panel2.Controls.Add(this.viewPanel);
             this.rootSplitContainer.Size = new System.Drawing.Size(1103, 456);
             this.rootSplitContainer.SplitterDistance = 258;
             this.rootSplitContainer.TabIndex = 1;
@@ -138,6 +146,25 @@
             this.treeView.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView_BeforeCollapse);
             this.treeView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeView_MouseDoubleClick);
             // 
+            // viewPanel
+            // 
+            this.viewPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.viewPanel.Location = new System.Drawing.Point(-1, 0);
+            this.viewPanel.Name = "viewPanel";
+            this.viewPanel.Size = new System.Drawing.Size(842, 421);
+            this.viewPanel.TabIndex = 0;
+            // 
+            // viewControlPanel
+            // 
+            this.viewControlPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.viewControlPanel.Location = new System.Drawing.Point(-1, 417);
+            this.viewControlPanel.Name = "viewControlPanel";
+            this.viewControlPanel.Size = new System.Drawing.Size(842, 39);
+            this.viewControlPanel.TabIndex = 1;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -154,6 +181,7 @@
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.rootSplitContainer.Panel1.ResumeLayout(false);
+            this.rootSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.rootSplitContainer)).EndInit();
             this.rootSplitContainer.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -175,6 +203,8 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
+        private System.Windows.Forms.Panel viewPanel;
+        private System.Windows.Forms.Panel viewControlPanel;
 
     }
 }

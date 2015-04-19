@@ -35,23 +35,42 @@ namespace ComicBrowser
         private Control[] thumbnailBoxes;
         private CBXml cbxml;
 
-        public ComicView(Panel panel)
+        public ComicView(Panel panel, Panel controlPanel)
         {
             this.panel = panel;
 
+            //--panel--
             //scrollbar
             scrollbar.Anchor = ((AnchorStyles)(((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Right)));
             scrollbar.Name = "vScrollBar";
             scrollbar.TabIndex = 0;
-            panel.Controls.Add(scrollbar);
             scrollbar.Location = new Point(panel.Width - SCROLLBAR_WIDTH, 0);
             scrollbar.Size = new Size(SCROLLBAR_WIDTH, panel.Height);
             scrollbar.SmallChange = SMALL_CHANGE;
             scrollbar.LargeChange = LARGE_CHANGE;
             scrollbar.Scroll += onScroll;
 
+            panel.Controls.Add(scrollbar);
+
             //panel
             panel.MouseEnter += (sender, e) => scrollbar.Focus();
+
+            //--control panel--
+            TrackBar trackbar = new TrackBar();
+            trackbar.Anchor = ((AnchorStyles)((AnchorStyles.Bottom | AnchorStyles.Right)));
+            trackbar.Location = new Point(609, 3);
+            trackbar.Name = "trackbar";
+            trackbar.Size = new Size(230, 45);
+            trackbar.TabIndex = 2;
+
+            controlPanel.Controls.Add(trackbar);
+
+            ToolTip trackbarToolTip = new ToolTip();
+            trackbarToolTip.AutomaticDelay = 5000;
+            trackbarToolTip.InitialDelay = 1000;
+            trackbarToolTip.ReshowDelay = 500;
+            trackbarToolTip.ShowAlways = true;
+            trackbarToolTip.SetToolTip(trackbar, "Change the spacing between the thumbnails");
         }
 
         public void SetView(CBXml cbxml)
