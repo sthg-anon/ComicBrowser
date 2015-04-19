@@ -14,21 +14,23 @@ namespace ComicBrowser
         public string File { get; set; }
         public int Issue { get; set; }
         public Image[] Images { get; set; }
-        public bool Valid { get; private set; }
 
-        private Image _thumbnail;
+        private volatile Image _thumbnail;
+        private volatile bool _valid;
 
         public Image Thumbnail
         {
             get
             {
-                if(_thumbnail == null)
-                {
-                    _thumbnail = getThumbnail();
-                    this.Valid = this.Thumbnail != null;
-                }
-
                 return _thumbnail;
+            }
+        }
+
+        public bool Valid
+        {
+            get
+            {
+                return _valid;
             }
         }
 
@@ -42,7 +44,7 @@ namespace ComicBrowser
             this.Issue = issue;
             this.Tags = tags;
             this.dir = dir;
-            this.Valid = false;
+            this._valid = false;
         }
 
         public string AbsolutePath()
@@ -87,6 +89,12 @@ namespace ComicBrowser
                 thumbnail = scaleImage(thumbnail, ComicView.THUMBNAIL_WIDTH, ComicView.THUMBNAIL_HEIGHT);
             }
             return thumbnail;
+        }
+
+        public void GenerateThumbnail()
+        {
+            _thumbnail = getThumbnail();
+            this._valid = this.Thumbnail != null;
         }
 
         private static Image scaleImage(Image image, int maxWidth, int maxHeight)

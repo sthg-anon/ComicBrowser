@@ -20,6 +20,7 @@ namespace ComicBrowser
         private Dictionary<string, Comic> comicMap;
                                   //folder, child xml
         public Dictionary<string, CBXml> ChildXMLs { get; private set; }
+        public bool ThumbnailsGenerated { get; set; }
         public bool Valid { get; private set; }
         public List<Comic> Comics { get; private set; }
 

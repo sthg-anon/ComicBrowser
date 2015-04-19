@@ -58,11 +58,22 @@ namespace ComicBrowser
 
             this.cbxml = cbxml;
 
-            OnPanelResized();
+            if(!cbxml.ThumbnailsGenerated)
+            {
+                ThumbnailGeneratorProgressWindow tgpw = new ThumbnailGeneratorProgressWindow(cbxml);
+                tgpw.Finished += OnPanelResized;
+                tgpw.Show();
+                tgpw.Start();
+            }
+            else
+            {
+                OnPanelResized();
+            }
         }
 
         public void OnPanelResized()
         {
+            cbxml.ThumbnailsGenerated = true;
             //Console.WriteLine("Comics count: {0}", cbxml.Comics.Count);
             //columns vertical, rows horizontal
             this.width = panel.Width - SCROLLBAR_WIDTH;
