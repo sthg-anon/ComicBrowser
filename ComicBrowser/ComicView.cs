@@ -139,7 +139,7 @@ namespace ComicBrowser
                         c.GenerateThumbnail();
                     }
                 });
-                tgpw.Finished += OnPanelResized;
+                tgpw.Finished += AdjustView;
                 tgpw.Text = "Generating thumbnails...";
                 tgpw.Show();
                 tgpw.Start();
@@ -148,11 +148,11 @@ namespace ComicBrowser
             }
             else
             {
-                OnPanelResized();
+                AdjustView();
             }
         }
 
-        public void OnPanelResized()
+        public void AdjustView()
         {
             //columns vertical, rows horizontal
             scrollbar.Value = scrollbar.Minimum;
@@ -250,7 +250,7 @@ namespace ComicBrowser
             priorSpacerTrackbarValue = spacerTrackbar.Value;
             spacerHeight = spacerTrackbar.Value * SPACER_RESIZE_STEP;
             spacerWidth = spacerTrackbar.Value * SPACER_RESIZE_STEP;
-            OnPanelResized();
+            AdjustView();
         }
 
         private void onSizeTrackbarMove(object sender, EventArgs e)
@@ -268,7 +268,7 @@ namespace ComicBrowser
                 c.GenerateThumbnail();
             });
             tgpw.Text = "Regenerating thumbnails...";
-            tgpw.Finished += OnPanelResized;
+            tgpw.Finished += AdjustView;
             tgpw.Show();
             tgpw.Start();
             sizeTrackbar.Enabled = false;

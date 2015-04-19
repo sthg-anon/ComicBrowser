@@ -24,7 +24,7 @@ namespace ComicBrowser
             //view
             view = new ComicView(viewPanel, viewControlPanel);
             view.ComicClicked += (c) => Console.WriteLine("{0} clicked!", c.File);
-            rootSplitContainer.SplitterMoved += (sender, e) => view.OnPanelResized();
+            rootSplitContainer.SplitterMoved += (sender, e) => view.AdjustView();
             
             //set up file history
             this.history = new SavedItemHistory("history.xml", this.CreateGraphics(), this.Font);
@@ -42,7 +42,7 @@ namespace ComicBrowser
             //update the dropdown menu
             updateHistoryDropdown();
 
-            this.ResizeEnd += (resize_sender, resize_e) => view.OnPanelResized();
+            this.ResizeEnd += (resize_sender, resize_e) => view.AdjustView();
 
         }
 
@@ -222,7 +222,7 @@ namespace ComicBrowser
 
                 if (WindowState == FormWindowState.Maximized || WindowState == FormWindowState.Normal)
                 {
-                    view.OnPanelResized();
+                    view.AdjustView();
                 }
             }
         }
