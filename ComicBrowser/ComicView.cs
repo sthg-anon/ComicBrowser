@@ -63,7 +63,7 @@ namespace ComicBrowser
 
         public void OnPanelResized()
         {
-            Console.WriteLine("Comics count: {0}", cbxml.Comics.Count);
+            //Console.WriteLine("Comics count: {0}", cbxml.Comics.Count);
             //columns vertical, rows horizontal
             this.width = panel.Width - SCROLLBAR_WIDTH;
             this.height = panel.Height;
@@ -71,16 +71,18 @@ namespace ComicBrowser
             int columns = (int) Math.Floor((double)(this.width - WIDTH_SPACER) / (WIDTH_SPACER + THUMBNAIL_WIDTH));
             int rows = (int)Math.Ceiling((double)cbxml.Comics.Count / columns);
 
-            Console.WriteLine("Columns: {0}\nRows: {1}", columns, rows);
+            //Console.WriteLine("Columns: {0}\nRows: {1}", columns, rows);
 
-            int visibleRows = (int)Math.Ceiling((double)(this.height - HEIGHT_SPACER) / (HEIGHT_SPACER + THUMBNAIL_HEIGHT));
+            int visibleRows = (int)Math.Floor((double)(this.height - HEIGHT_SPACER) / (HEIGHT_SPACER + THUMBNAIL_HEIGHT));
+            //Console.WriteLine("visible rows: {0}", visibleRows);
             if (rows <= visibleRows)
             {
                 scrollbar.Enabled = false;
             }
             else
             {
-                scrollbar.Enabled = true;;
+                scrollbar.Enabled = true;
+                scrollbar.Maximum = rows;
             }
 
             if(thumbnailBoxes != null)
