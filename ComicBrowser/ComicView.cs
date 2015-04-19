@@ -21,6 +21,8 @@ namespace ComicBrowser
         private const int SMALL_CHANGE = 50;
         private const int LARGE_CHANGE = 300;
 
+        private const int SCROLLBAR_BOTTOM_BACKPEDAL_CONST = 3;
+
         private readonly ScrollBar scrollbar = new VScrollBar();
         private readonly Panel panel;
 
@@ -97,7 +99,7 @@ namespace ComicBrowser
             else
             {
                 scrollbar.Enabled = true;
-                scrollbar.Maximum = (rows * THUMBNAIL_HEIGHT) + (rows * HEIGHT_SPACER) - (3 * HEIGHT_SPACER);
+                scrollbar.Maximum = (rows * THUMBNAIL_HEIGHT) + (rows * HEIGHT_SPACER) - (SCROLLBAR_BOTTOM_BACKPEDAL_CONST * HEIGHT_SPACER);
             }
 
             if(thumbnailBoxes != null)
