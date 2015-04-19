@@ -9,8 +9,6 @@ namespace ComicBrowser
 {
     class Comic
     {
-        internal const int THUMBNAIL_WIDTH = 100;
-        internal const int THUMBNAIL_HEIGHT = 150;
 
         public HashSet<string> Tags { get; private set; }
         public string File { get; set; }
@@ -77,7 +75,7 @@ namespace ComicBrowser
                     thumbnail = Image.FromStream(stream);
                 }
 
-                thumbnail = scaleImage(thumbnail, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
+                thumbnail = scaleImage(thumbnail, ComicView.THUMBNAIL_WIDTH, ComicView.THUMBNAIL_HEIGHT);
             }
             return thumbnail;
         }

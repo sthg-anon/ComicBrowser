@@ -40,13 +40,10 @@
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rootSplitContainer)).BeginInit();
             this.rootSplitContainer.Panel1.SuspendLayout();
-            this.rootSplitContainer.Panel2.SuspendLayout();
             this.rootSplitContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -112,10 +109,6 @@
             // rootSplitContainer.Panel1
             // 
             this.rootSplitContainer.Panel1.Controls.Add(this.treeView);
-            // 
-            // rootSplitContainer.Panel2
-            // 
-            this.rootSplitContainer.Panel2.Controls.Add(this.pictureBox1);
             this.rootSplitContainer.Size = new System.Drawing.Size(899, 399);
             this.rootSplitContainer.SplitterDistance = 211;
             this.rootSplitContainer.TabIndex = 1;
@@ -145,14 +138,6 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Location = new System.Drawing.Point(71, 54);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(161, 132);
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -168,10 +153,8 @@
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.rootSplitContainer.Panel1.ResumeLayout(false);
-            this.rootSplitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.rootSplitContainer)).EndInit();
             this.rootSplitContainer.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -191,7 +174,6 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.PictureBox pictureBox1;
 
     }
 }

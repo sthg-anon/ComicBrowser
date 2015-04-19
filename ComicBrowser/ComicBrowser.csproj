@@ -48,9 +48,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CBXml.cs" />
-    <Compile Include="CBXReader.cs" />
     <Compile Include="Comic.cs" />
     <Compile Include="ComicFileType.cs" />
+    <Compile Include="ComicView.cs" />
     <Compile Include="ImageFileType.cs" />
     <Compile Include="SavedItemHistory.cs" />
     <Compile Include="FileUtils.cs" />

@@ -11,6 +11,7 @@ namespace ComicBrowser
     {
         private SavedItemHistory history;
         private CBXml root = null;
+        private ComicView view = null;
 
         public MainForm()
         {
@@ -32,6 +33,8 @@ namespace ComicBrowser
 
             //update the dropdown menu
             updateHistoryDropdown();
+
+            this.ResizeEnd += (resize_sender, resize_e) => view.OnPanelResized();
         }
 
         private void openCBXML(string file, bool create)
@@ -66,6 +69,13 @@ namespace ComicBrowser
 
             //populate the tree view
             populateTreeView();
+
+            for (int ii = 0; ii < root.Comics.Count; ii++)
+            {
+                root.Comics[ii].GenerateThumbnail();
+            }
+
+            view = new ComicView(root, rootSplitContainer.Panel2);
         }
 
         private void onFileHistorySelect(object sender, EventArgs e)
@@ -144,7 +154,7 @@ namespace ComicBrowser
             if (cbxml.Valid)
             {
                 Console.WriteLine("--comics loaded--");
-                CBXReader reader = new CBXReader(cbxml);
+                //CBXReader reader = new CBXReader(cbxml);
                 Comic c = cbxml.Comics[0];
                 //for (int ii = 0; ii < cbxml.Comics.Count; ii++)
                 //{
@@ -155,9 +165,9 @@ namespace ComicBrowser
                 Image i = c.Thumbnail;
                 //Image i = Image.FromFile(@"D:\desktop\tails_sonic.jpg");
                // PictureBox box = new PictureBox();
-                pictureBox1.Image = i;
-                pictureBox1.Height = i.Height;
-                pictureBox1.Width = i.Width;
+                //pictureBox1.Image = i;
+                //pictureBox1.Height = i.Height;
+                //pictureBox1.Width = i.Width;
                 //box.Show();
                 //using(Graphics g = this.CreateGraphics())
                 //{
