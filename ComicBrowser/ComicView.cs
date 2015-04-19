@@ -92,9 +92,7 @@ namespace ComicBrowser
                         break;
                     }
 
-                   // Console.WriteLine("Creating picture box for {0}", cbxml.Comics[index].File);
                     Image thumbnail = cbxml.Comics[index].Thumbnail;
-                    //Console.WriteLine("image is null: {0}", thumbnail == null);
 
                     PictureBox pictureBox = new PictureBox();
                     pictureBox.Width = THUMBNAIL_WIDTH;
@@ -102,11 +100,8 @@ namespace ComicBrowser
                     pictureBox.Image = thumbnail;
                     pictureBox.Location = new Point(x, y);
                     thumbnailBoxes[index] = pictureBox;
-                    panel.Controls.Add(pictureBox);
-                    //Console.WriteLine("added at {0}, {1}", x, y);
 
                     x += THUMBNAIL_WIDTH + WIDTH_SPACER;
-                    //Console.WriteLine("making x bigger ({0})", x);
                 }
                 y += THUMBNAIL_HEIGHT + HEIGHT_SPACER;
             }
