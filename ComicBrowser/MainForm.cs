@@ -23,7 +23,7 @@ namespace ComicBrowser
             //view
             view = new ComicView(viewPanel, viewControlPanel);
             view.ComicClicked += (c) => Console.WriteLine("{0} clicked!", c.File);
-            //rootSplitContainer.SplitterMoved += (sender, e) => view.OnPanelResized();
+            rootSplitContainer.SplitterMoved += (sender, e) => view.OnPanelResized();
             
            // this.ResizeEnd += 
 
