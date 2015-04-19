@@ -13,7 +13,6 @@ namespace ComicBrowser
         private const int WIDTH_SPACER = 40;
         private const int HEIGHT_SPACER = 40;
 
-        private readonly CBXml cbxml;
         private readonly Panel panel;
 
         private int width;
@@ -23,12 +22,11 @@ namespace ComicBrowser
 
         private int tabIndex = 0;
         private Control[] thumbnailBoxes;
+        private CBXml cbxml;
 
-        public ComicView(CBXml cbxml, Panel panel)
+        public ComicView(Panel panel)
         {
-            this.cbxml = cbxml;
             this.panel = panel;
-
 
             //scrollbar
             scrollbar.Anchor = ((AnchorStyles)(((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Right)));
@@ -38,11 +36,25 @@ namespace ComicBrowser
             scrollbar.Location = new Point(panel.Width - SCROLLBAR_WIDTH, 0);
             scrollbar.Size = new Size(SCROLLBAR_WIDTH, panel.Height);
             scrollbar.Minimum = 0;
-            OnPanelResized();
 
             //panel
             panel.MouseEnter += (sender, e) => scrollbar.Focus();
-            
+        }
+
+        public void SetView(CBXml cbxml)
+        {
+            if(this.cbxml != null)
+            {
+                foreach(Control c in thumbnailBoxes)
+                {
+                    panel.Controls.Remove(c);
+                    c.Dispose();
+                }
+            }
+
+            this.cbxml = cbxml;
+
+            OnPanelResized();
         }
 
         public void OnPanelResized()

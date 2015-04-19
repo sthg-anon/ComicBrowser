@@ -11,11 +11,12 @@ namespace ComicBrowser
     {
         private SavedItemHistory history;
         private CBXml root = null;
-        private ComicView view = null;
+        private readonly ComicView view = null;
 
         public MainForm()
         {
             InitializeComponent();
+            view = new ComicView(rootSplitContainer.Panel2);
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -35,6 +36,7 @@ namespace ComicBrowser
             updateHistoryDropdown();
 
             this.ResizeEnd += (resize_sender, resize_e) => view.OnPanelResized();
+
         }
 
         private void openCBXML(string file, bool create)
@@ -70,12 +72,7 @@ namespace ComicBrowser
             //populate the tree view
             populateTreeView();
 
-            for (int ii = 0; ii < root.Comics.Count; ii++)
-            {
-                root.Comics[ii].GenerateThumbnail();
-            }
-
-            view = new ComicView(root, rootSplitContainer.Panel2);
+            view.SetView(root);
         }
 
         private void onFileHistorySelect(object sender, EventArgs e)
@@ -153,16 +150,16 @@ namespace ComicBrowser
 
             if (cbxml.Valid)
             {
-                Console.WriteLine("--comics loaded--");
+                //Console.WriteLine("--comics loaded--");
                 //CBXReader reader = new CBXReader(cbxml);
-                Comic c = cbxml.Comics[0];
+                //Comic c = cbxml.Comics[0];
                 //for (int ii = 0; ii < cbxml.Comics.Count; ii++)
                 //{
                 //    Console.WriteLine("Comic: {0} ({1})", cbxml.Comics[ii].AbsolutePath(), cbxml.Comics[ii].File);
                 //    reader.GetCover(cbxml.Comics[ii]);
                 //}
-                c.GenerateThumbnail();
-                Image i = c.Thumbnail;
+               // c.GenerateThumbnail();
+                //Image i = c.Thumbnail;
                 //Image i = Image.FromFile(@"D:\desktop\tails_sonic.jpg");
                // PictureBox box = new PictureBox();
                 //pictureBox1.Image = i;
@@ -173,6 +170,7 @@ namespace ComicBrowser
                 //{
                 //    g.DrawImage(c.Thumbnail, new Point(100, 100));
                 //}
+                view.SetView(cbxml);
             }
         }
 

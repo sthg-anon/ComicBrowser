@@ -14,8 +14,23 @@ namespace ComicBrowser
         public string File { get; set; }
         public int Issue { get; set; }
         public Image[] Images { get; set; }
-        public Image Thumbnail { get; private set; }
         public bool Valid { get; private set; }
+
+        private Image _thumbnail;
+
+        public Image Thumbnail
+        {
+            get
+            {
+                if(_thumbnail == null)
+                {
+                    _thumbnail = getThumbnail();
+                    this.Valid = this.Thumbnail != null;
+                }
+
+                return _thumbnail;
+            }
+        }
 
         private readonly string dir;
 
@@ -33,12 +48,6 @@ namespace ComicBrowser
         public string AbsolutePath()
         {
             return System.IO.Path.Combine(dir, File);
-        }
-
-        public void GenerateThumbnail()
-        {
-            this.Thumbnail = getThumbnail();
-            this.Valid = this.Thumbnail != null;
         }
 
         private Image getThumbnail()
