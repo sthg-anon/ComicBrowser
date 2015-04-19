@@ -17,6 +17,8 @@ namespace ComicBrowser
         private const int WIDTH_SPACER = 40;
         private const int HEIGHT_SPACER = 40;
 
+        private const int SCROLL_SPEED = 20;
+
         private readonly Panel panel;
 
         private int width;
@@ -42,8 +44,8 @@ namespace ComicBrowser
             scrollbar.Location = new Point(panel.Width - SCROLLBAR_WIDTH, 0);
             scrollbar.Size = new Size(SCROLLBAR_WIDTH, panel.Height);
             scrollbar.Minimum = 0;
+            scrollbar.Maximum = 100;
             scrollbar.Scroll += (sender, e) => OnScroll();
-
             //panel
             panel.MouseEnter += (sender, e) => scrollbar.Focus();
         }
@@ -89,14 +91,24 @@ namespace ComicBrowser
 
             int visibleRows = (int)Math.Floor((double)(this.height - HEIGHT_SPACER) / (HEIGHT_SPACER + THUMBNAIL_HEIGHT));
             //Console.WriteLine("visible rows: {0}", visibleRows);
+            scrollbar.Value = 0;
             if (rows <= visibleRows)
             {
                 scrollbar.Enabled = false;
             }
             else
             {
+                //Console.WriteLine("height: {0}", height);
+                double temp = (rows * THUMBNAIL_HEIGHT) + (rows * HEIGHT_SPACER) + HEIGHT_SPACER;
+                //Console.WriteLine("temp: {0}", temp);
                 scrollbar.Enabled = true;
-                scrollbar.Maximum = rows * 20;
+               // scrollbar.Maximum = 80;
+               // scrollbar.Maximum = ((int)Math.Ceiling(temp / height)) * 15;
+                scrollbar.Maximum = (rows * THUMBNAIL_HEIGHT) + (rows * HEIGHT_SPACER) - (3 * HEIGHT_SPACER);
+                scrollbar.SmallChange = 50;
+                scrollbar.LargeChange = 300;
+                //Console.WriteLine("Small change: {0}\nLarge change: {1}", scrollbar.SmallChange, scrollbar.LargeChange);
+                //Console.WriteLine("scrmax: {0}", scrollbar.Maximum);
             }
 
             if(thumbnailBoxes != null)
@@ -142,7 +154,9 @@ namespace ComicBrowser
 
         private void OnScroll()
         {
-            heightOffset = scrollbar.Value * 20;
+            Console.WriteLine("Scroll value: {0}", scrollbar.Value);
+            //heightOffset = scrollbar.Value + SCROLL_SPEED;
+            heightOffset = scrollbar.Value;
 
             int columns = (int)Math.Floor((double)(this.width - WIDTH_SPACER) / (WIDTH_SPACER + THUMBNAIL_WIDTH));
             int rows = (int)Math.Ceiling((double)cbxml.Comics.Count / columns);
