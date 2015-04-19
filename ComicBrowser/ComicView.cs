@@ -248,11 +248,18 @@ namespace ComicBrowser
             {
                 return;
             }
-
             priorSizeTrackbarValue = sizeTrackbar.Value;
             thumbnailHeight = sizeTrackbar.Value * THUMBNAIL_HEIGHT_RESIZE_STEP;
             thumbnailWidth = sizeTrackbar.Value * THUMBNAIL_WIDTH_RESIZE_STEP;
-            OnPanelResized();
+
+            WorkWindow<Comic> tgpw = new WorkWindow<Comic>(cbxml.Comics, (c) =>
+            {
+                c.GenerateThumbnail();
+            });
+            tgpw.Text = "Regenerating thumbnails...";
+            tgpw.Finished += OnPanelResized;
+            tgpw.Show();
+            tgpw.Start();
         }
 
         public static int ThumbnailWidth()
