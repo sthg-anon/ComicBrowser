@@ -9,26 +9,31 @@ namespace ComicBrowser
 {
     public partial class MainForm : Form
     {
-        private SavedItemHistory history;
+        private readonly SavedItemHistory history;
+        private readonly ComicView view;
+
         private CBXml root = null;
-        private readonly ComicView view = null;
 
         public MainForm()
         {
             InitializeComponent();
-            view = new ComicView(rootSplitContainer.Panel2);
-        }
 
-        private void MainForm_Load(object sender, EventArgs e)
-        {
             Console.WriteLine("current directory: {0}", Directory.GetCurrentDirectory());
+
+            //view
+            view = new ComicView(rootSplitContainer.Panel2);
+            view.ComicClicked += (c) => Console.WriteLine("{0} clicked!", c.File);
+
             //set up file history
             this.history = new SavedItemHistory("history.xml", this.CreateGraphics(), this.Font);
 
             //open file listener
             history.OnFileSelect += this.onFileHistorySelect;
             openFileDialog.Filter = CBXml.getFileFilter();
+        }
 
+        private void MainForm_Load(object sender, EventArgs e)
+        {
             //open current cbxml.
             openCBXML(getArgFile(), false);
 

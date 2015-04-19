@@ -6,6 +6,10 @@ namespace ComicBrowser
 {
     class ComicView
     {
+        public delegate void comicClickDelegate(Comic comic);
+
+        public event comicClickDelegate ComicClicked;
+
         internal const int THUMBNAIL_WIDTH = 100;
         internal const int THUMBNAIL_HEIGHT = 150;
 
@@ -111,6 +115,7 @@ namespace ComicBrowser
                     pictureBox.Image = thumbnail;
                     pictureBox.Location = new Point(x, y);
                     pictureBox.Cursor = Cursors.Hand;
+                    pictureBox.Click += (sender, e) => ComicClicked(cbxml.Comics[index]);
                     thumbnailBoxes[index] = pictureBox;
 
                     x += THUMBNAIL_WIDTH + WIDTH_SPACER;
