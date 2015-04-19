@@ -12,6 +12,7 @@ namespace ComicBrowser
         private readonly SavedItemHistory history;
         private readonly ComicView view;
 
+        private FormWindowState LastWindowState = FormWindowState.Minimized;
         private CBXml root = null;
 
         public MainForm()
@@ -238,14 +239,15 @@ namespace ComicBrowser
 
         private void MainForm_Resize(object sender, EventArgs e)
         {
-            //if (WindowState == FormWindowState.Maximized)
-            //{
-            //    view.OnPanelResized();
-            //}
-            //if (WindowState == FormWindowState.Normal)
-            //{
-            //    view.OnPanelResized();
-            //}
+            if (WindowState != LastWindowState)
+            {
+                LastWindowState = WindowState;
+
+                if (WindowState == FormWindowState.Maximized || WindowState == FormWindowState.Normal)
+                {
+                    view.OnPanelResized();
+                }
+            }
         }
     }
 }
