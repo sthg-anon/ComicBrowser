@@ -12,10 +12,12 @@ namespace ComicBrowser
         public event comicClickDelegate ComicClicked;
 
         #region Constants
-        internal const int THUMBNAIL_WIDTH = 200;
-        internal const int THUMBNAIL_HEIGHT = 300;
+        private const int TRACKBAR_WIDTH = 230;
+        private const int TRACKBAR_START = 5;
 
-        private const int SPACER_RESIZE_STEP = 8;
+        private const int SPACER_RESIZE_STEP = (40 / TRACKBAR_START);
+        private const int THUMBNAIL_WIDTH_RESIZE_STEP = (200 / TRACKBAR_START);
+        private const int THUMBNAIL_HEIGHT_RESIZE_STEP = (300 / TRACKBAR_START);
 
         private const int SMALL_CHANGE = 50;
         private const int LARGE_CHANGE = 300;
@@ -28,9 +30,6 @@ namespace ComicBrowser
         private const int TOOLTIP_INITIAL_DELAY = 1000;
         private const int TOOLTIP_RESHOW_DELAY = 500;
         private const bool TOOLTIP_SHOW_ALWAYS = true;
-
-        private const int TRACKBAR_WIDTH = 230;
-        private const int TRACKBAR_START = 5;
 
         private const int TRACKBARS_SPACER = 15;
         #endregion
@@ -48,7 +47,11 @@ namespace ComicBrowser
         private int spacerWidth = 40;
         private int spacerHeight = 40;
 
+        private static int thumbnailWidth = 200;
+        private static int thumbnailHeight = 300;
+
         private int priorSpacerTrackbarValue = TRACKBAR_START;
+        private int priorSizeTrackbarValue = TRACKBAR_START;
 
         private Control[] thumbnailBoxes;
         private CBXml cbxml;
@@ -57,6 +60,7 @@ namespace ComicBrowser
         {
             this.panel = panel;
 
+            #region Controls
             //--panel--
             //scrollbar
             scrollbar.Anchor = ((AnchorStyles)(((AnchorStyles.Top | AnchorStyles.Bottom) | AnchorStyles.Right)));
@@ -90,6 +94,8 @@ namespace ComicBrowser
             sizeTrackbar.Location = new Point(controlPanel.Width - spacerTrackbar.Size.Width - TRACKBARS_SPACER - sizeTrackbar.Size.Width);
             sizeTrackbar.Name = "sizeTrackbar";
             sizeTrackbar.TabIndex = 3;
+            sizeTrackbar.MouseUp += onSizeTrackbarMove;
+            sizeTrackbar.Scroll += onSizeTrackbarMove;
             sizeTrackbar.Value = TRACKBAR_START;
             controlPanel.Controls.Add(sizeTrackbar);
 
@@ -101,6 +107,7 @@ namespace ComicBrowser
             trackbarToolTip.ShowAlways = TOOLTIP_SHOW_ALWAYS;
             trackbarToolTip.SetToolTip(spacerTrackbar, "Change the spacing between the thumbnails");
             trackbarToolTip.SetToolTip(sizeTrackbar, "Change the size of the thumbnails");
+            #endregion
         }
 
         public void SetView(CBXml cbxml)
@@ -118,8 +125,15 @@ namespace ComicBrowser
 
             if(!cbxml.ThumbnailsGenerated)
             {
-                ThumbnailGeneratorProgressWindow tgpw = new ThumbnailGeneratorProgressWindow(cbxml);
+                WorkWindow<Comic> tgpw = new WorkWindow<Comic>(cbxml.Comics, (c) => 
+                { 
+                    if(!c.Valid)
+                    {
+                        c.GenerateThumbnail();
+                    }
+                });
                 tgpw.Finished += OnPanelResized;
+                tgpw.Text = "Generating thumbnails...";
                 tgpw.Show();
                 tgpw.Start();
             }
@@ -138,10 +152,10 @@ namespace ComicBrowser
             this.width = panel.Width - SCROLLBAR_WIDTH;
             this.height = panel.Height;
 
-            this.columns = (int) Math.Floor((double)(this.width - spacerWidth) / (spacerWidth + THUMBNAIL_WIDTH));
+            this.columns = (int) Math.Floor((double)(this.width - spacerWidth) / (spacerWidth + thumbnailWidth));
             this.rows = (int)Math.Ceiling((double)cbxml.Comics.Count / columns);
 
-            int visibleRows = (int)Math.Floor((double)(this.height - spacerHeight) / (spacerHeight + THUMBNAIL_HEIGHT));
+            int visibleRows = (int)Math.Floor((double)(this.height - spacerHeight) / (spacerHeight + thumbnailHeight));
             if (rows <= visibleRows)
             {
                 scrollbar.Enabled = false;
@@ -149,7 +163,7 @@ namespace ComicBrowser
             else
             {
                 scrollbar.Enabled = true;
-                scrollbar.Maximum = (rows * THUMBNAIL_HEIGHT) + ((rows - SCROLL_BOTTOM_BACKPEDAL_CONST) * spacerHeight);
+                scrollbar.Maximum = (rows * thumbnailHeight) + ((rows - SCROLL_BOTTOM_BACKPEDAL_CONST) * spacerHeight);
             }
 
             if(thumbnailBoxes != null)
@@ -173,8 +187,8 @@ namespace ComicBrowser
                 Image thumbnail = cbxml.Comics[index].Thumbnail;
 
                 PictureBox pictureBox = new PictureBox();
-                pictureBox.Width = THUMBNAIL_WIDTH;
-                pictureBox.Height = THUMBNAIL_HEIGHT;
+                pictureBox.Width = thumbnailWidth;
+                pictureBox.Height = thumbnailHeight;
                 pictureBox.Image = thumbnail;
                 pictureBox.Location = new Point(x, y);
                 pictureBox.Cursor = Cursors.Hand;
@@ -209,9 +223,9 @@ namespace ComicBrowser
                     }
 
                     gid(x, y, index);
-                    x += THUMBNAIL_WIDTH + spacerWidth;
+                    x += thumbnailWidth + spacerWidth;
                 }
-                y += THUMBNAIL_HEIGHT + spacerHeight;
+                y += thumbnailHeight + spacerHeight;
             }
         }
 
@@ -226,6 +240,29 @@ namespace ComicBrowser
             spacerHeight = spacerTrackbar.Value * SPACER_RESIZE_STEP;
             spacerWidth = spacerTrackbar.Value * SPACER_RESIZE_STEP;
             OnPanelResized();
+        }
+
+        private void onSizeTrackbarMove(object sender, EventArgs e)
+        {
+            if(sizeTrackbar.Value == priorSizeTrackbarValue)
+            {
+                return;
+            }
+
+            priorSizeTrackbarValue = sizeTrackbar.Value;
+            thumbnailHeight = sizeTrackbar.Value * THUMBNAIL_HEIGHT_RESIZE_STEP;
+            thumbnailWidth = sizeTrackbar.Value * THUMBNAIL_WIDTH_RESIZE_STEP;
+            OnPanelResized();
+        }
+
+        public static int ThumbnailWidth()
+        {
+            return thumbnailWidth;
+        }
+
+        public static int ThumbnailHeight()
+        {
+            return thumbnailHeight;
         }
     }
 }

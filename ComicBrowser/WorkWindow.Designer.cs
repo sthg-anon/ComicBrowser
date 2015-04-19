@@ -1,6 +1,6 @@
 ﻿namespace ComicBrowser
 {
-    partial class ThumbnailGeneratorProgressWindow
+    partial class WorkWindow<T>
     {
         /// <summary>
         /// Required designer variable.
@@ -50,7 +50,7 @@
             this.cancelButton.UseVisualStyleBackColor = true;
             this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
             // 
-            // ThumbnailGeneratorProgressWindow
+            // WorkWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -59,8 +59,8 @@
             this.Controls.Add(this.cancelButton);
             this.Controls.Add(this.progressBar1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "ThumbnailGeneratorProgressWindow";
-            this.Text = "Generating Thumbnails...";
+            this.Name = "WorkWindow";
+            this.Text = "Doing Work...";
             this.TopMost = true;
             this.ResumeLayout(false);
 

@@ -5,38 +5,38 @@ using System.Windows.Forms;
 
 namespace ComicBrowser
 {
-    public partial class ThumbnailGeneratorProgressWindow : Form
+    public partial class WorkWindow<T> : Form
     {
         public delegate void finishedDelegate();
+        public delegate void DoWork(T item);
         public event finishedDelegate Finished;
 
-        private readonly List<Comic> comics;
+        private readonly List<T> items;
+        private readonly DoWork worker;
 
         private volatile bool done = false;
 
-        internal ThumbnailGeneratorProgressWindow(CBXml cbxml)
+        internal WorkWindow(List<T> items, DoWork worker)
         {
             InitializeComponent();
 
-            this.comics = new List<Comic>(cbxml.Comics);
+            this.worker = worker;
+            this.items = new List<T>(items);
         }
 
         public void Start()
         {
             Thread thread = new Thread(run);
             progressBar1.Minimum = 0;
-            progressBar1.Maximum = comics.Count;
+            progressBar1.Maximum = items.Count;
             thread.Start();
         }
 
         private void run()
         {
-            foreach (Comic c in comics)
+            foreach (T c in items)
             {
-                if(!c.Valid)
-                {
-                    c.GenerateThumbnail();
-                }
+                worker(c);
 
                 this.Invoke((MethodInvoker)delegate
                 {

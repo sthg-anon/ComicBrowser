@@ -60,11 +60,11 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ThumbnailGeneratorProgressWindow.cs">
+    <Compile Include="WorkWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ThumbnailGeneratorProgressWindow.Designer.cs">
-      <DependentUpon>ThumbnailGeneratorProgressWindow.cs</DependentUpon>
+    <Compile Include="WorkWindow.Designer.cs">
+      <DependentUpon>WorkWindow.cs</DependentUpon>
     </Compile>
     <Compile Include="TreeNodeExtensions.cs" />
     <Compile Include="Program.cs" />
@@ -81,8 +81,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="ThumbnailGeneratorProgressWindow.resx">
-      <DependentUpon>ThumbnailGeneratorProgressWindow.cs</DependentUpon>
+    <EmbeddedResource Include="WorkWindow.resx">
+      <DependentUpon>WorkWindow.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

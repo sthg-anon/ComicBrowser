@@ -15,6 +15,7 @@ namespace ComicBrowser
         public int Issue { get; set; }
         public Image[] Images { get; set; }
 
+        private volatile Image originalCoverImage = null;
         private volatile Image _thumbnail;
         private volatile bool _valid;
 
@@ -54,40 +55,41 @@ namespace ComicBrowser
 
         private Image getThumbnail()
         {
-            Image thumbnail = null;
-            using (var archive = ArchiveFactory.Open(AbsolutePath()))
+            if(originalCoverImage == null)
             {
-                List<IArchiveEntry> entries = new List<IArchiveEntry>(archive.Entries);
-                if (entries.Count <= 0)
+                using (var archive = ArchiveFactory.Open(AbsolutePath()))
                 {
-                    return null;
-                }
-
-                entries = entries.OrderBy(e => e.FilePath).ToList();
-
-                IArchiveEntry thumbnailEntry = null;
-                for(int ii = 0; ii < entries.Count; ii++)
-                {
-                    if (ImageFileTypeExtensions.Matches(entries[ii].FilePath))
+                    List<IArchiveEntry> entries = new List<IArchiveEntry>(archive.Entries);
+                    if (entries.Count <= 0)
                     {
-                        thumbnailEntry = entries[ii];
-                        break;
+                        return null;
+                    }
+
+                    entries = entries.OrderBy(e => e.FilePath).ToList();
+
+                    IArchiveEntry thumbnailEntry = null;
+                    for (int ii = 0; ii < entries.Count; ii++)
+                    {
+                        if (ImageFileTypeExtensions.Matches(entries[ii].FilePath))
+                        {
+                            thumbnailEntry = entries[ii];
+                            break;
+                        }
+                    }
+
+                    if (thumbnailEntry == null)
+                    {
+                        return null;
+                    }
+
+                    using (MemoryStream stream = new MemoryStream())
+                    {
+                        thumbnailEntry.WriteTo(stream);
+                        originalCoverImage = Image.FromStream(stream);
                     }
                 }
-
-                if(thumbnailEntry == null)
-                {
-                    return null;
-                }
-
-                using(MemoryStream stream = new MemoryStream())
-                {
-                    thumbnailEntry.WriteTo(stream);
-                    thumbnail = Image.FromStream(stream);
-                }
-
-                thumbnail = scaleImage(thumbnail, ComicView.THUMBNAIL_WIDTH, ComicView.THUMBNAIL_HEIGHT);
             }
+            Image thumbnail = scaleImage(originalCoverImage, ComicView.ThumbnailWidth(), ComicView.ThumbnailHeight());
             return thumbnail;
         }
 
