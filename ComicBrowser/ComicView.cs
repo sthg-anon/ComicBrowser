@@ -52,7 +52,7 @@ namespace ComicBrowser
             this.width = panel.Width - SCROLLBAR_WIDTH;
             this.height = panel.Height;
 
-            int columns = (int) Math.Floor((double)(this.width + WIDTH_SPACER) / (WIDTH_SPACER + THUMBNAIL_WIDTH));
+            int columns = (int) Math.Floor((double)(this.width - WIDTH_SPACER) / (WIDTH_SPACER + THUMBNAIL_WIDTH));
             int rows = (int)Math.Ceiling((double)cbxml.Comics.Count / columns);
 
             Console.WriteLine("Columns: {0}\nRows: {1}", columns, rows);
