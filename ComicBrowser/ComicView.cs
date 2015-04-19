@@ -14,8 +14,7 @@ namespace ComicBrowser
         internal const int THUMBNAIL_WIDTH = 200;
         internal const int THUMBNAIL_HEIGHT = 300;
 
-        private const int SPACER_WIDTH = 40;
-        private const int SPACER_HEIGHT = 40;
+        private const int SPACER_RESIZE_STEP = 20;
 
         private const int SMALL_CHANGE = 50;
         private const int LARGE_CHANGE = 300;
@@ -24,6 +23,11 @@ namespace ComicBrowser
 
         private const int SCROLL_BOTTOM_BACKPEDAL_CONST = 3;
 
+        private const int TOOLTIP_AUTO_POP_DELAY = 5000;
+        private const int TOOLTIP_INITIAL_DELAY = 1000;
+        private const int TOOLTIP_RESHOW_DELAY = 500;
+        private const bool TOOLTIP_SHOW_ALWAYS = true;
+
         private readonly ScrollBar scrollbar = new VScrollBar();
         private readonly Panel panel;
 
@@ -31,6 +35,9 @@ namespace ComicBrowser
         private int height = 0;
         private int rows = 0;
         private int columns = 0;
+
+        private int spacerWidth = 40;
+        private int spacerHeight = 40;
 
         private Control[] thumbnailBoxes;
         private CBXml cbxml;
@@ -49,7 +56,6 @@ namespace ComicBrowser
             scrollbar.SmallChange = SMALL_CHANGE;
             scrollbar.LargeChange = LARGE_CHANGE;
             scrollbar.Scroll += onScroll;
-
             panel.Controls.Add(scrollbar);
 
             //panel
@@ -62,14 +68,14 @@ namespace ComicBrowser
             trackbar.Name = "trackbar";
             trackbar.Size = new Size(230, 45);
             trackbar.TabIndex = 2;
-
             controlPanel.Controls.Add(trackbar);
 
+            //--tooltip--
             ToolTip trackbarToolTip = new ToolTip();
-            trackbarToolTip.AutomaticDelay = 5000;
-            trackbarToolTip.InitialDelay = 1000;
-            trackbarToolTip.ReshowDelay = 500;
-            trackbarToolTip.ShowAlways = true;
+            trackbarToolTip.AutomaticDelay = TOOLTIP_AUTO_POP_DELAY;
+            trackbarToolTip.InitialDelay = TOOLTIP_INITIAL_DELAY;
+            trackbarToolTip.ReshowDelay = TOOLTIP_RESHOW_DELAY;
+            trackbarToolTip.ShowAlways = TOOLTIP_SHOW_ALWAYS;
             trackbarToolTip.SetToolTip(trackbar, "Change the spacing between the thumbnails");
         }
 
@@ -108,10 +114,10 @@ namespace ComicBrowser
             this.width = panel.Width - SCROLLBAR_WIDTH;
             this.height = panel.Height;
 
-            this.columns = (int) Math.Floor((double)(this.width - SPACER_WIDTH) / (SPACER_WIDTH + THUMBNAIL_WIDTH));
+            this.columns = (int) Math.Floor((double)(this.width - spacerWidth) / (spacerWidth + THUMBNAIL_WIDTH));
             this.rows = (int)Math.Ceiling((double)cbxml.Comics.Count / columns);
 
-            int visibleRows = (int)Math.Floor((double)(this.height - SPACER_HEIGHT) / (SPACER_HEIGHT + THUMBNAIL_HEIGHT));
+            int visibleRows = (int)Math.Floor((double)(this.height - spacerHeight) / (spacerHeight + THUMBNAIL_HEIGHT));
             if (rows <= visibleRows)
             {
                 scrollbar.Enabled = false;
@@ -119,7 +125,7 @@ namespace ComicBrowser
             else
             {
                 scrollbar.Enabled = true;
-                scrollbar.Maximum = (rows * THUMBNAIL_HEIGHT) + ((rows - SCROLL_BOTTOM_BACKPEDAL_CONST) * SPACER_HEIGHT);
+                scrollbar.Maximum = (rows * THUMBNAIL_HEIGHT) + ((rows - SCROLL_BOTTOM_BACKPEDAL_CONST) * spacerHeight);
             }
 
             if(thumbnailBoxes != null)
@@ -132,6 +138,12 @@ namespace ComicBrowser
 
             thumbnailBoxes = new Control[cbxml.Comics.Count];
 
+            ToolTip toolTip = new ToolTip();
+            toolTip.AutoPopDelay = TOOLTIP_AUTO_POP_DELAY;
+            toolTip.InitialDelay = TOOLTIP_INITIAL_DELAY;
+            toolTip.ReshowDelay = TOOLTIP_RESHOW_DELAY;
+            toolTip.ShowAlways = TOOLTIP_SHOW_ALWAYS;
+
             iterateAnd((x, y, index) => 
             {
                 Image thumbnail = cbxml.Comics[index].Thumbnail;
@@ -142,6 +154,7 @@ namespace ComicBrowser
                 pictureBox.Image = thumbnail;
                 pictureBox.Location = new Point(x, y);
                 pictureBox.Cursor = Cursors.Hand;
+                toolTip.SetToolTip(pictureBox, cbxml.Comics[index].File);
                 pictureBox.Click += (sender, e) => ComicClicked(cbxml.Comics[index]);
                 thumbnailBoxes[index] = pictureBox;
             });
@@ -157,10 +170,10 @@ namespace ComicBrowser
 
         private void iterateAnd(gridIteratorDelegate gid)
         {
-            int y = SPACER_HEIGHT;
+            int y = spacerHeight;
             for (int row = 0; row < rows; row++)
             {
-                int x = SPACER_WIDTH;
+                int x = spacerWidth;
                 for (int column = 0; column < columns; column++)
                 {
                     int index = (row * columns) + column;
@@ -172,9 +185,9 @@ namespace ComicBrowser
                     }
 
                     gid(x, y, index);
-                    x += THUMBNAIL_WIDTH + SPACER_WIDTH;
+                    x += THUMBNAIL_WIDTH + spacerWidth;
                 }
-                y += THUMBNAIL_HEIGHT + SPACER_HEIGHT;
+                y += THUMBNAIL_HEIGHT + spacerHeight;
             }
         }
     }
