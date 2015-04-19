@@ -73,15 +73,14 @@ namespace ComicBrowser
 
             Console.WriteLine("Columns: {0}\nRows: {1}", columns, rows);
 
-            if(rows <= 1)
+            int visibleRows = (int)Math.Ceiling((double)(this.height - HEIGHT_SPACER) / (HEIGHT_SPACER + THUMBNAIL_HEIGHT));
+            if (rows <= visibleRows)
             {
                 scrollbar.Enabled = false;
             }
             else
             {
-                scrollbar.Enabled = true;
-                scrollbar.Maximum = (rows * THUMBNAIL_HEIGHT) + (rows * HEIGHT_SPACER) + HEIGHT_SPACER;
-                Console.WriteLine("scrollbar max: {0}", scrollbar.Maximum);
+                scrollbar.Enabled = true;;
             }
 
             if(thumbnailBoxes != null)
