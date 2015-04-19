@@ -99,7 +99,7 @@ namespace ComicBrowser
             else
             {
                 scrollbar.Enabled = true;
-                scrollbar.Maximum = (rows * THUMBNAIL_HEIGHT) + (rows * HEIGHT_SPACER) - (SCROLLBAR_BOTTOM_BACKPEDAL_CONST * HEIGHT_SPACER);
+                scrollbar.Maximum = (rows * THUMBNAIL_HEIGHT) + ((rows - SCROLLBAR_BOTTOM_BACKPEDAL_CONST) * HEIGHT_SPACER);
             }
 
             if(thumbnailBoxes != null)
