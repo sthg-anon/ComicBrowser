@@ -85,7 +85,6 @@ namespace ComicBrowser
                 foreach(Control c in thumbnailBoxes)
                 {
                     panel.Controls.Remove(c);
-                    c.Dispose();
                 }
             }
 
@@ -100,7 +99,7 @@ namespace ComicBrowser
 
                     if (index >= cbxml.Comics.Count)
                     {
-                        column = columns;//make this return false on the outer loop to break out
+                        column = columns;//this makes the outer loop false so it can be broken out of
                         break;
                     }
 
