@@ -10,8 +10,8 @@ namespace ComicBrowser
 
         public event comicClickDelegate ComicClicked;
 
-        internal const int THUMBNAIL_WIDTH = 100;
-        internal const int THUMBNAIL_HEIGHT = 150;
+        internal const int THUMBNAIL_WIDTH = 200;
+        internal const int THUMBNAIL_HEIGHT = 300;
 
         private const int SCROLLBAR_WIDTH = 20;
         private const int WIDTH_SPACER = 40;
@@ -21,6 +21,8 @@ namespace ComicBrowser
 
         private int width;
         private int height;
+
+        private int heightOffset = 0;
 
         private readonly ScrollBar scrollbar = new VScrollBar();
 
@@ -40,6 +42,7 @@ namespace ComicBrowser
             scrollbar.Location = new Point(panel.Width - SCROLLBAR_WIDTH, 0);
             scrollbar.Size = new Size(SCROLLBAR_WIDTH, panel.Height);
             scrollbar.Minimum = 0;
+            scrollbar.Scroll += (sender, e) => OnScroll();
 
             //panel
             panel.MouseEnter += (sender, e) => scrollbar.Focus();
@@ -93,7 +96,7 @@ namespace ComicBrowser
             else
             {
                 scrollbar.Enabled = true;
-                scrollbar.Maximum = rows;
+                scrollbar.Maximum = rows * 20;
             }
 
             if(thumbnailBoxes != null)
@@ -135,6 +138,34 @@ namespace ComicBrowser
                 y += THUMBNAIL_HEIGHT + HEIGHT_SPACER;
             }
             panel.Controls.AddRange(thumbnailBoxes);
+        }
+
+        private void OnScroll()
+        {
+            heightOffset = scrollbar.Value * 20;
+
+            int columns = (int)Math.Floor((double)(this.width - WIDTH_SPACER) / (WIDTH_SPACER + THUMBNAIL_WIDTH));
+            int rows = (int)Math.Ceiling((double)cbxml.Comics.Count / columns);
+
+            int y = HEIGHT_SPACER;
+            for (int row = 0; row < rows; row++)
+            {
+                int x = WIDTH_SPACER;
+                for (int column = 0; column < columns; column++)
+                {
+                    int index = (row * columns) + column;
+
+                    if (index >= cbxml.Comics.Count)
+                    {
+                        column = columns;//this makes the outer loop false so it can be broken out of
+                        break;
+                    }
+
+                    thumbnailBoxes[index].Location = new Point(x, y - heightOffset);
+                    x += THUMBNAIL_WIDTH + WIDTH_SPACER;
+                }
+                y += THUMBNAIL_HEIGHT + HEIGHT_SPACER;
+            }
         }
     }
 }

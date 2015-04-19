@@ -23,6 +23,8 @@ namespace ComicBrowser
             //view
             view = new ComicView(rootSplitContainer.Panel2);
             view.ComicClicked += (c) => Console.WriteLine("{0} clicked!", c.File);
+            
+           // this.ResizeEnd += 
 
             //set up file history
             this.history = new SavedItemHistory("history.xml", this.CreateGraphics(), this.Font);
@@ -231,6 +233,18 @@ namespace ComicBrowser
             }
 
             return file;
+        }
+
+        private void MainForm_Resize(object sender, EventArgs e)
+        {
+            if (WindowState == FormWindowState.Maximized)
+            {
+                view.OnPanelResized();
+            }
+            //if (WindowState == FormWindowState.Normal)
+            //{
+            //    view.OnPanelResized();
+            //}
         }
     }
 }
