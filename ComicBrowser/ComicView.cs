@@ -14,14 +14,15 @@ namespace ComicBrowser
         internal const int THUMBNAIL_WIDTH = 200;
         internal const int THUMBNAIL_HEIGHT = 300;
 
-        private const int SCROLLBAR_WIDTH = 20;
-        private const int WIDTH_SPACER = 40;
-        private const int HEIGHT_SPACER = 40;
+        private const int SPACER_WIDTH = 40;
+        private const int SPACER_HEIGHT = 40;
 
         private const int SMALL_CHANGE = 50;
         private const int LARGE_CHANGE = 300;
 
-        private const int SCROLLBAR_BOTTOM_BACKPEDAL_CONST = 3;
+        private const int SCROLLBAR_WIDTH = 20;
+
+        private const int SCROLL_BOTTOM_BACKPEDAL_CONST = 3;
 
         private readonly ScrollBar scrollbar = new VScrollBar();
         private readonly Panel panel;
@@ -47,7 +48,7 @@ namespace ComicBrowser
             scrollbar.Size = new Size(SCROLLBAR_WIDTH, panel.Height);
             scrollbar.SmallChange = SMALL_CHANGE;
             scrollbar.LargeChange = LARGE_CHANGE;
-            scrollbar.Scroll += (sender, e) => onScroll();
+            scrollbar.Scroll += onScroll;
 
             //panel
             panel.MouseEnter += (sender, e) => scrollbar.Focus();
@@ -88,10 +89,10 @@ namespace ComicBrowser
             this.width = panel.Width - SCROLLBAR_WIDTH;
             this.height = panel.Height;
 
-            this.columns = (int) Math.Floor((double)(this.width - WIDTH_SPACER) / (WIDTH_SPACER + THUMBNAIL_WIDTH));
+            this.columns = (int) Math.Floor((double)(this.width - SPACER_WIDTH) / (SPACER_WIDTH + THUMBNAIL_WIDTH));
             this.rows = (int)Math.Ceiling((double)cbxml.Comics.Count / columns);
 
-            int visibleRows = (int)Math.Floor((double)(this.height - HEIGHT_SPACER) / (HEIGHT_SPACER + THUMBNAIL_HEIGHT));
+            int visibleRows = (int)Math.Floor((double)(this.height - SPACER_HEIGHT) / (SPACER_HEIGHT + THUMBNAIL_HEIGHT));
             if (rows <= visibleRows)
             {
                 scrollbar.Enabled = false;
@@ -99,7 +100,7 @@ namespace ComicBrowser
             else
             {
                 scrollbar.Enabled = true;
-                scrollbar.Maximum = (rows * THUMBNAIL_HEIGHT) + ((rows - SCROLLBAR_BOTTOM_BACKPEDAL_CONST) * HEIGHT_SPACER);
+                scrollbar.Maximum = (rows * THUMBNAIL_HEIGHT) + ((rows - SCROLL_BOTTOM_BACKPEDAL_CONST) * SPACER_HEIGHT);
             }
 
             if(thumbnailBoxes != null)
@@ -129,7 +130,7 @@ namespace ComicBrowser
             panel.Controls.AddRange(thumbnailBoxes);
         }
 
-        private void onScroll()
+        private void onScroll(object sender, ScrollEventArgs e)
         {
             int heightOffset = scrollbar.Value;
             iterateAnd((x, y, index) => thumbnailBoxes[index].Location = new Point(x, y - heightOffset));
@@ -137,10 +138,10 @@ namespace ComicBrowser
 
         private void iterateAnd(gridIteratorDelegate gid)
         {
-            int y = HEIGHT_SPACER;
+            int y = SPACER_HEIGHT;
             for (int row = 0; row < rows; row++)
             {
-                int x = WIDTH_SPACER;
+                int x = SPACER_WIDTH;
                 for (int column = 0; column < columns; column++)
                 {
                     int index = (row * columns) + column;
@@ -152,9 +153,9 @@ namespace ComicBrowser
                     }
 
                     gid(x, y, index);
-                    x += THUMBNAIL_WIDTH + WIDTH_SPACER;
+                    x += THUMBNAIL_WIDTH + SPACER_WIDTH;
                 }
-                y += THUMBNAIL_HEIGHT + HEIGHT_SPACER;
+                y += THUMBNAIL_HEIGHT + SPACER_HEIGHT;
             }
         }
     }
