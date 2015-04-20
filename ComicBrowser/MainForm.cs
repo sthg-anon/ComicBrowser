@@ -149,7 +149,7 @@ namespace ComicBrowser
 
         private void populateTreeView()
         {
-            root.PrintTree(0);
+            //root.PrintTree(0);
             if (root == null) return;
 
             treeView.Nodes.Add(root.GetNode());
