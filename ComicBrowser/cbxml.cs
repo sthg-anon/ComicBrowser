@@ -54,7 +54,7 @@ namespace ComicBrowser
             {
                 string fileName = node.SelectSingleNode("file").InnerText;
 
-                if(!ComicFileTypeExtensions.Matches(fileName))
+                if(!ComicFileTypeExtensions.Matches(fileName) || !File.Exists(fileName))
                 {
                     //invalid entry! This entry won't get put in the map, so when the stuff is saved back,
                     //this data won't be included. In other words, this 'comic' entry gets deleted,
