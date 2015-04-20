@@ -48,6 +48,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CBXml.cs" />
+    <Compile Include="ChangeComicIssueForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChangeComicIssueForm.Designer.cs">
+      <DependentUpon>ChangeComicIssueForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Comic.cs" />
     <Compile Include="ComicFileType.cs" />
     <Compile Include="ComicView.cs" />
@@ -69,6 +75,9 @@
     <Compile Include="TreeNodeExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="ChangeComicIssueForm.resx">
+      <DependentUpon>ChangeComicIssueForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>

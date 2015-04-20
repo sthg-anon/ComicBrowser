@@ -204,7 +204,25 @@ namespace ComicBrowser
                 pictureBox.Location = new Point(x, y);
                 pictureBox.Cursor = Cursors.Hand;
                 toolTip.SetToolTip(pictureBox, cbxml.Comics[index].File);
-                pictureBox.Click += (sender, e) => ComicClicked(cbxml.Comics[index]);
+                pictureBox.Click += (sender, e) =>
+                {
+                    MouseEventArgs args = (MouseEventArgs)e;
+                    if(args.Button == MouseButtons.Left)
+                    {
+                        ComicClicked(cbxml.Comics[index]);
+                    }
+                    else if (args.Button == MouseButtons.Right)
+                    {
+                        int suggestedIndex = (cbxml.Comics[index].Issue >= 0) ? cbxml.Comics[index].Issue : index + 1;
+                        ChangeComicIssueForm form = new ChangeComicIssueForm(cbxml.Comics[index], suggestedIndex);
+                        form.Finished += () =>
+                        {
+                            cbxml.MakeComicList();
+                            AdjustView();
+                        };
+                        form.Show();
+                    }
+                };
                 thumbnailBoxes[index] = pictureBox;
             });
 

@@ -177,7 +177,7 @@ namespace ComicBrowser
 
             ChildXMLs = loadChildren();
             //ChildXMLs = new Dictionary<string, CBXml>();
-            this.Comics = makeComicList();
+            MakeComicList();
             this.Valid = true;
         }
 
@@ -259,7 +259,7 @@ namespace ComicBrowser
             return node;
         }
 
-        private List<Comic> makeComicList()
+        public void MakeComicList()
         {
             List<Comic> initialList = new List<Comic>(comicMap.Values);
             List<Comic> comicList = new List<Comic>(initialList.Count);
@@ -282,7 +282,7 @@ namespace ComicBrowser
                 comicList.Insert(c.Issue, c);
             }
 
-            return comicList;
+            this.Comics = comicList;
         }
 
         public static bool FileExtensionMatches(string file)

@@ -35,6 +35,14 @@ namespace ComicBrowser
             }
         }
 
+        internal Image OriginalCoverImage
+        {
+            get
+            {
+                return originalCoverImage;
+            }
+        }
+
         private readonly string dir;
 
         public Comic(string file, string dir) : this(file, dir, -1, new HashSet<string>()) { }
