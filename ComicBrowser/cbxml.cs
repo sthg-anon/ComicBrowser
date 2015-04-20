@@ -118,6 +118,8 @@ namespace ComicBrowser
 
         public void Save()
         {
+            if (!Valid)
+                return;
             if (file != null && file.Equals(string.Empty))
                 return;
 
