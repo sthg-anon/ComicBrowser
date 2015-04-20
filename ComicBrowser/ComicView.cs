@@ -46,6 +46,7 @@ namespace ComicBrowser
         private readonly TrackBar spacerTrackbar = new TrackBar();
         private readonly TrackBar sizeTrackbar = new TrackBar();
         private readonly Panel panel;
+        private readonly Form parent;
 
         private int width = 0;
         private int height = 0;
@@ -64,9 +65,10 @@ namespace ComicBrowser
         private Control[] thumbnailBoxes;
         private CBXml cbxml;
 
-        public ComicView(Panel panel, Panel controlPanel)
+        public ComicView(Form parent, Panel panel, Panel controlPanel)
         {
             this.panel = panel;
+            this.parent = parent;
 
             #region Controls
             //--panel--
@@ -139,7 +141,7 @@ namespace ComicBrowser
 
             if(!cbxml.ThumbnailsGenerated)
             {
-                WorkWindow<Comic> tgpw = new WorkWindow<Comic>(cbxml.Comics, (c) => 
+                WorkWindow<Comic> tgpw = new WorkWindow<Comic>(parent, cbxml.Comics, (c) => 
                 { 
                     if(!c.Valid)
                     {
@@ -292,7 +294,7 @@ namespace ComicBrowser
             thumbnailHeight = sizeTrackbar.Value * THUMBNAIL_HEIGHT_RESIZE_STEP;
             thumbnailWidth = sizeTrackbar.Value * THUMBNAIL_WIDTH_RESIZE_STEP;
 
-            WorkWindow<Comic> tgpw = new WorkWindow<Comic>(cbxml.Comics, (c) =>
+            WorkWindow<Comic> tgpw = new WorkWindow<Comic>(parent, cbxml.Comics, (c) =>
             {
                 c.GenerateThumbnail();
             });

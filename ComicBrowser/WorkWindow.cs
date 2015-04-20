@@ -13,15 +13,17 @@ namespace ComicBrowser
 
         private readonly List<T> items;
         private readonly DoWork worker;
+        private readonly Form parent;
 
         private volatile bool done = false;
 
-        internal WorkWindow(List<T> items, DoWork worker)
+        internal WorkWindow(Form parent, List<T> items, DoWork worker)
         {
             InitializeComponent();
 
             this.worker = worker;
             this.items = new List<T>(items);
+            this.parent = parent;
         }
 
         public void Start()
@@ -30,6 +32,8 @@ namespace ComicBrowser
             progressBar1.Minimum = 0;
             progressBar1.Maximum = items.Count;
             thread.Start();
+
+            parent.Enabled = false;
         }
 
         private void run()
@@ -66,6 +70,11 @@ namespace ComicBrowser
         private void cancelButton_Click(object sender, EventArgs e)
         {
             done = true;
+        }
+
+        private void onFormClosed(object sender, FormClosedEventArgs e)
+        {
+            parent.Enabled = true;
         }
     }
 }
