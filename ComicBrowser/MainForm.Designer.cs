@@ -41,8 +41,9 @@
             this.rootSplitContainer = new System.Windows.Forms.SplitContainer();
             this.treeView = new System.Windows.Forms.TreeView();
             this.viewControlPanel = new System.Windows.Forms.Panel();
-            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.viewPanel = new ComicBrowser.DoubleBufferedPanel();
+            this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rootSplitContainer)).BeginInit();
             this.rootSplitContainer.Panel1.SuspendLayout();
@@ -53,7 +54,8 @@
             // menuStrip
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem});
+            this.fileToolStripMenuItem,
+            this.aboutToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(1103, 24);
@@ -174,6 +176,13 @@
             this.viewPanel.Size = new System.Drawing.Size(842, 421);
             this.viewPanel.TabIndex = 0;
             // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -216,6 +225,7 @@
         private System.Windows.Forms.Panel viewControlPanel;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
         private DoubleBufferedPanel viewPanel;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
 
     }
 }
