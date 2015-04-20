@@ -41,7 +41,8 @@ namespace ComicBrowser
         private void MainForm_Load(object sender, EventArgs e)
         {
             //open current cbxml.
-            openCBXML(getArgFile(), false);
+            string file = getArgFile();
+            openCBXML(file, false);
 
             //update the dropdown menu
             updateHistoryDropdown();
@@ -52,40 +53,27 @@ namespace ComicBrowser
 
         private void openCBXML(string file, bool create)
         {
-            if (file.Equals(String.Empty))
+            if(!file.Equals(string.Empty))
             {
-                root = new CBXml();
-                if (root.Valid)
-                {
-                    cbxmlPostOpen();
-                    return;
-                }
-
-                root.Open(file, create);
-
-                if (root.Valid)
-                {
-                    cbxmlPostOpen();
-                }
+                root = new CBXml(file, true);//guranteed creation
             }
             else
             {
-                root = new CBXml(file);
-                cbxmlPostOpen();
+                root = new CBXml(false);//look for a cbxml in the working directory. Root will either be valid or not...
             }
-        }
 
-        private void cbxmlPostOpen()
-        {
-            root.Save();
+            if(root.Valid)
+            {
+                root.Save();
 
-            //enable tree view
-            treeView.Enabled = true;
+                //enable tree view
+                treeView.Enabled = true;
 
-            //populate the tree view
-            populateTreeView();
+                //populate the tree view
+                populateTreeView();
 
-            view.SetView(root);
+                view.SetView(root);
+            }
         }
 
         private void onFileHistorySelect(object sender, EventArgs e)
