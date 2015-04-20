@@ -42,6 +42,7 @@
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.viewPanel = new System.Windows.Forms.Panel();
             this.viewControlPanel = new System.Windows.Forms.Panel();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.rootSplitContainer)).BeginInit();
             this.rootSplitContainer.Panel1.SuspendLayout();
@@ -64,6 +65,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
             this.openToolStripMenuItem,
+            this.saveToolStripMenuItem,
             this.toolStripSeparator1,
             this.recentLibrariesToolStripMenuItem,
             this.toolStripSeparator2,
@@ -165,6 +167,13 @@
             this.viewControlPanel.Size = new System.Drawing.Size(842, 39);
             this.viewControlPanel.TabIndex = 1;
             // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.saveToolStripMenuItem.Text = "Save";
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -205,6 +214,7 @@
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.Panel viewPanel;
         private System.Windows.Forms.Panel viewControlPanel;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
 
     }
 }

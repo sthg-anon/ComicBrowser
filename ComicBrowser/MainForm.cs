@@ -228,5 +228,10 @@ namespace ComicBrowser
                 }
             }
         }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            root.Save();
+        }
     }
 }
