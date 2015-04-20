@@ -261,37 +261,26 @@ namespace ComicBrowser
 
         private List<Comic> makeComicList()
         {
-            List<Comic> comicList = new List<Comic>();
-
-            //make a list with the initial unsorted values
             List<Comic> initialList = new List<Comic>(comicMap.Values);
-
-            //make a list of indexless comics
-            List<Comic> indexless_comics = new List<Comic>();
-
-            //make a list of indexed comics
+            List<Comic> comicList = new List<Comic>(initialList.Count);
             List<Comic> indexed_comics = new List<Comic>();
 
-            //populate comics lists
             for (int ii = 0; ii < initialList.Count; ii++)
             {
-                if (initialList[ii].Issue < 0)
-                {
-                    indexless_comics.Add(initialList[ii]);
-                }
-                else
+                if (initialList[ii].Issue >= 0 && initialList[ii].Issue < comicList.Count)
                 {
                     indexed_comics.Add(initialList[ii]);
                 }
+                else
+                {
+                    comicList.Add(initialList[ii]);
+                }
             }
-
-            //sort indexed comics by number
-            indexed_comics = indexed_comics.OrderBy(c => c.Issue).ToList();
-            //sort indexless comics by name
-            indexless_comics = indexless_comics.OrderBy(c => c.File).ToList();
-            //append lists
-            comicList.AddRange(indexed_comics);
-            comicList.AddRange(indexless_comics);
+            comicList = comicList.OrderBy(c => c.File).ToList();
+            foreach(Comic c in indexed_comics)
+            {
+                comicList.Insert(c.Issue, c);
+            }
 
             return comicList;
         }
