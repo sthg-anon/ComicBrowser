@@ -81,6 +81,7 @@ namespace ComicBrowser
             scrollbar.SmallChange = SMALL_CHANGE;
             scrollbar.LargeChange = LARGE_CHANGE;
             scrollbar.Scroll += onScroll;
+            scrollbar.Enabled = false;
             panel.Controls.Add(scrollbar);
 
             //panel
