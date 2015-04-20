@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ChangeComicIssueForm));
             this.lblIssue = new System.Windows.Forms.Label();
             this.numericUpDown = new System.Windows.Forms.NumericUpDown();
             this.pictureBox = new System.Windows.Forms.PictureBox();
@@ -103,6 +104,7 @@
             this.Controls.Add(this.numericUpDown);
             this.Controls.Add(this.lblIssue);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ChangeComicIssueForm";
             this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown)).EndInit();
