@@ -48,23 +48,25 @@ namespace ComicBrowser
 
         private void openCBXML(string file, bool create)
         {
-            root = new CBXml();
-
-            if(root.Valid)
-            {
-                cbxmlPostOpen();
-                return;
-            }
-
             if (file.Equals(String.Empty))
             {
-                return;
+                root = new CBXml();
+                if (root.Valid)
+                {
+                    cbxmlPostOpen();
+                    return;
+                }
+
+                root.Open(file, create);
+
+                if (root.Valid)
+                {
+                    cbxmlPostOpen();
+                }
             }
-
-            root.Open(file, create);
-
-            if(root.Valid)
+            else
             {
+                root = new CBXml(file);
                 cbxmlPostOpen();
             }
         }
@@ -95,7 +97,9 @@ namespace ComicBrowser
             }
             else
             {
-                //open(file);
+                Console.WriteLine("file: {0}", file);
+                treeView.Nodes.Clear();
+                openCBXML(file, false);
             }
         }
 
@@ -132,6 +136,8 @@ namespace ComicBrowser
             {
                 history.OpenFile(file);
                 updateHistoryDropdown();
+                treeView.Nodes.Clear();
+                openCBXML(file, false);
             }
         }
 
@@ -143,6 +149,7 @@ namespace ComicBrowser
 
         private void populateTreeView()
         {
+            root.PrintTree(0);
             if (root == null) return;
 
             treeView.Nodes.Add(root.GetNode());

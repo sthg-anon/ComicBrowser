@@ -11,7 +11,6 @@ namespace ComicBrowser
     {
         internal const string CBXML_EXTENSION = ".cbxml";
         internal const string DEFAULT_CBXML = "comics" + CBXML_EXTENSION;
-        internal const string ROOT_NODE_NAME = "root";
 
         private readonly bool isRoot;
         private string file;
@@ -25,6 +24,8 @@ namespace ComicBrowser
         public List<Comic> Comics { get; private set; }
 
         public CBXml() : this(Directory.GetCurrentDirectory(), true) { }
+
+        public CBXml(string file) : this(new FileInfo(file).Directory.FullName, true) { }
 
         private CBXml(string directory, bool root)
         {
@@ -250,7 +251,7 @@ namespace ComicBrowser
                     index++;
                 }
 
-                node = new TreeNode(isRoot ? ROOT_NODE_NAME : dirName, nodes);
+                node = new TreeNode(dirName, nodes);
             }
 
             node.AddPairing(this);
