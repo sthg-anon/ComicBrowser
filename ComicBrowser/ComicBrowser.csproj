@@ -57,6 +57,9 @@
     <Compile Include="Comic.cs" />
     <Compile Include="ComicFileType.cs" />
     <Compile Include="ComicView.cs" />
+    <Compile Include="DoubleBufferedPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="ImageFileType.cs" />
     <Compile Include="SavedItemHistory.cs" />
     <Compile Include="FileUtils.cs" />

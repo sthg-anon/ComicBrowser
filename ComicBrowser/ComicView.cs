@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace ComicBrowser
@@ -115,6 +116,12 @@ namespace ComicBrowser
             trackbarToolTip.SetToolTip(spacerTrackbar, "Change the spacing between the thumbnails");
             trackbarToolTip.SetToolTip(sizeTrackbar, "Change the size of the thumbnails");
             #endregion
+
+            if (File.Exists("Background.png"))
+            {
+                panel.BackgroundImageLayout = ImageLayout.Stretch;
+                panel.BackgroundImage = Image.FromFile("Background.png");
+            }
         }
 
         public void SetView(CBXml cbxml)
@@ -203,6 +210,7 @@ namespace ComicBrowser
                 pictureBox.Image = thumbnail;
                 pictureBox.Location = new Point(x, y);
                 pictureBox.Cursor = Cursors.Hand;
+                pictureBox.BackColor = Color.Transparent;
                 toolTip.SetToolTip(pictureBox, cbxml.Comics[index].File);
                 pictureBox.Click += (sender, e) =>
                 {

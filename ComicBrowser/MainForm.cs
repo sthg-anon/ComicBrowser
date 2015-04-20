@@ -19,7 +19,11 @@ namespace ComicBrowser
         {
             InitializeComponent();
 
-            Console.WriteLine("current directory: {0}", Directory.GetCurrentDirectory());
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            this.SetStyle(ControlStyles.UserPaint, true);
+
+            //Console.WriteLine("current directory: {0}", Directory.GetCurrentDirectory());
 
             //view
             view = new ComicView(viewPanel, viewControlPanel);

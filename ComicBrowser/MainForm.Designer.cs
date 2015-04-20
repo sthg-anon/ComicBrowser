@@ -40,7 +40,7 @@
             this.rootSplitContainer = new System.Windows.Forms.SplitContainer();
             this.treeView = new System.Windows.Forms.TreeView();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.viewPanel = new System.Windows.Forms.Panel();
+            this.viewPanel = new DoubleBufferedPanel();
             this.viewControlPanel = new System.Windows.Forms.Panel();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
@@ -181,6 +181,7 @@
             this.ClientSize = new System.Drawing.Size(1103, 480);
             this.Controls.Add(this.rootSplitContainer);
             this.Controls.Add(this.menuStrip);
+            this.DoubleBuffered = true;
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MainForm";
             this.Text = "Comic Browser";
@@ -212,7 +213,7 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-        private System.Windows.Forms.Panel viewPanel;
+        private DoubleBufferedPanel viewPanel;
         private System.Windows.Forms.Panel viewControlPanel;
         private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
 
