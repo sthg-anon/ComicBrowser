@@ -144,7 +144,6 @@
             this.treeView.Name = "treeView";
             this.treeView.Size = new System.Drawing.Size(252, 450);
             this.treeView.TabIndex = 0;
-            this.treeView.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView_BeforeCollapse);
             this.treeView.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.treeView_MouseDoubleClick);
             // 
             // viewPanel

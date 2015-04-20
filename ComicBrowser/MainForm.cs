@@ -167,11 +167,6 @@ namespace ComicBrowser
             }
         }
 
-        private void treeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
-        {
-            e.Cancel = true;
-        }
-
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             saveFileDialog.FileName = CBXml.DEFAULT_CBXML;
