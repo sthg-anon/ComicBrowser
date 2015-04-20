@@ -161,6 +161,9 @@ namespace ComicBrowser
 
         public void AdjustView()
         {
+            if (cbxml == null)
+                return;
+
             //columns vertical, rows horizontal
             scrollbar.Value = scrollbar.Minimum;
             cbxml.ThumbnailsGenerated = true;

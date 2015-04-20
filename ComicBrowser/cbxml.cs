@@ -111,6 +111,9 @@ namespace ComicBrowser
 
         public void Save()
         {
+            if (file.Equals(string.Empty))
+                return;
+
             using (FileStream fs = new FileStream(file, FileMode.Create, FileAccess.Write))
             {
                 XmlTextWriter writer = new XmlTextWriter(fs, System.Text.Encoding.UTF8);
