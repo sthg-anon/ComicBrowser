@@ -20,30 +20,37 @@ namespace ComicBrowser
                                   //folder, child xml
         public Dictionary<string, CBXml> ChildXMLs { get; private set; }
         public bool ThumbnailsGenerated { get; set; }
-        public bool Valid { get; private set; }
+        public readonly bool Valid;
         public List<Comic> Comics { get; private set; }
 
-        public CBXml() : this(Directory.GetCurrentDirectory(), true) { }
+        //public CBXml(string file) : this(new FileInfo(file).Directory.FullName, true) { }
+        /// <summary>
+        /// Creates a CBXml file at the expected file location. If it happens that that file exists, cbxml will be valid.
+        /// If the xml does not exist, then this instance will be invalid until it is saved.
+        /// </summary>
+        /// <param name="file">The expected location of the cbxml</param>
+        public CBXml(string file, bool create) : this(file, true, create) { }
 
-        public CBXml(string file) : this(new FileInfo(file).Directory.FullName, true) { }
+        /// <summary>
+        /// Creates a cbxml file, and will try to intelligently locate the cbxml in the current directory
+        /// </summary>
+        public CBXml(bool create) : this(findCBXML(Directory.GetCurrentDirectory()), true, create) { }
 
-        private CBXml(string directory, bool root)
+        private CBXml(string file, bool root, bool create)
         {
             this.isRoot = root;
-            this.directory = directory;
 
-            if (root)
+            if(file.Equals(String.Empty))
             {
-                string potentialCBXML = findCBXML(directory);
-                if (!potentialCBXML.Equals(String.Empty))
-                {
-                    Open(potentialCBXML, false);
-                    this.Valid = true;
-                    return;
-                }
+                this.Valid = false;
             }
+            else
+            {
+                this.file = file;
+                this.directory = new FileInfo(file).Directory.FullName;
 
-            this.Valid = false;
+                this.Valid = open(create);
+            }
         }
 
         private Dictionary<string, Comic> read(XmlDocument xml)
@@ -111,7 +118,7 @@ namespace ComicBrowser
 
         public void Save()
         {
-            if (file.Equals(string.Empty))
+            if (file != null && file.Equals(string.Empty))
                 return;
 
             using (FileStream fs = new FileStream(file, FileMode.Create, FileAccess.Write))
@@ -152,17 +159,23 @@ namespace ComicBrowser
             }
         }
 
-        public void Open(string inputFile, bool create)
+        /// <summary>
+        /// Opens the file. Expects the file member variable to NOT be empty
+        /// </summary>
+        /// <param name="create">If the file should be created or not.</param>
+        /// <returns>The vailidity of the cbxml after opening</returns>
+        private bool open(bool create)
         {
-            this.file = inputFile.Equals(String.Empty) ? findCBXML(directory) : inputFile;
-            if (!create && (file.Equals(String.Empty) || !File.Exists(file)))
+            //Console.WriteLine("open!");
+            //this.file = inputFile.Equals(String.Empty) ? findCBXML(directory) : inputFile;
+            if (!create && !File.Exists(file))
             {
-                this.Valid = false;
-                return;
+                return false;
             }
             else if (create && !File.Exists(file))
             {
                 this.comicMap = new Dictionary<string, Comic>();
+                //continues, this.valid = true; set at the end
             }
             else
             {
@@ -181,7 +194,7 @@ namespace ComicBrowser
             ChildXMLs = loadChildren();
             //ChildXMLs = new Dictionary<string, CBXml>();
             MakeComicList();
-            this.Valid = true;
+            return true;
         }
 
         public void PrintTree(int level)
@@ -205,15 +218,13 @@ namespace ComicBrowser
             foreach (string dir in directories)
             {
                 string childPath = Path.Combine(directory, dir);
-                string cbxml = getChildCbxmlFileName(childPath);
-                if (!cbxml.Equals(String.Empty))
+                string cbxmlFile = getChildCbxmlFileName(childPath);
+                if (!cbxmlFile.Equals(String.Empty))
                 {
-                    string dirName = new DirectoryInfo(dir).Name;
-                    CBXml child = new CBXml(dir, false);
-                    child.Open(cbxml, true);
+                    CBXml child = new CBXml(cbxmlFile, false, true);
                     if (child.Valid)
                     {
-                        children.Add(dirName, child);
+                        children.Add(dir, child);
                     }
                 }
             }
